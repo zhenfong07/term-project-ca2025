@@ -1,0 +1,708 @@
+FIRRTL version 1.2.0
+circuit AXI4WritePathTest_Anon :
+  module Memory :
+    input clock : Clock
+    input reset : UInt<1>
+    input io_bundle_address : UInt<32> @[4-soc/src/main/scala/peripheral/Memory.scala 60:14]
+    input io_bundle_write_data : UInt<32> @[4-soc/src/main/scala/peripheral/Memory.scala 60:14]
+    input io_bundle_write_enable : UInt<1> @[4-soc/src/main/scala/peripheral/Memory.scala 60:14]
+    input io_bundle_write_strobe_0 : UInt<1> @[4-soc/src/main/scala/peripheral/Memory.scala 60:14]
+    input io_bundle_write_strobe_1 : UInt<1> @[4-soc/src/main/scala/peripheral/Memory.scala 60:14]
+    input io_bundle_write_strobe_2 : UInt<1> @[4-soc/src/main/scala/peripheral/Memory.scala 60:14]
+    input io_bundle_write_strobe_3 : UInt<1> @[4-soc/src/main/scala/peripheral/Memory.scala 60:14]
+    output io_bundle_read_data : UInt<32> @[4-soc/src/main/scala/peripheral/Memory.scala 60:14]
+    output io_instruction : UInt<32> @[4-soc/src/main/scala/peripheral/Memory.scala 60:14]
+    input io_instruction_address : UInt<32> @[4-soc/src/main/scala/peripheral/Memory.scala 60:14]
+    input io_debug_read_address : UInt<32> @[4-soc/src/main/scala/peripheral/Memory.scala 60:14]
+    output io_debug_read_data : UInt<32> @[4-soc/src/main/scala/peripheral/Memory.scala 60:14]
+
+    mem mem_0 : @[4-soc/src/main/scala/peripheral/Memory.scala 70:24]
+      data-type => UInt<8>
+      depth => 256
+      read-latency => 1
+      write-latency => 1
+      reader => io_bundle_read_data_MPORT
+      reader => io_debug_read_data_MPORT
+      reader => io_instruction_MPORT
+      writer => MPORT
+      read-under-write => undefined
+    mem mem_1 : @[4-soc/src/main/scala/peripheral/Memory.scala 70:24]
+      data-type => UInt<8>
+      depth => 256
+      read-latency => 1
+      write-latency => 1
+      reader => io_bundle_read_data_MPORT
+      reader => io_debug_read_data_MPORT
+      reader => io_instruction_MPORT
+      writer => MPORT
+      read-under-write => undefined
+    mem mem_2 : @[4-soc/src/main/scala/peripheral/Memory.scala 70:24]
+      data-type => UInt<8>
+      depth => 256
+      read-latency => 1
+      write-latency => 1
+      reader => io_bundle_read_data_MPORT
+      reader => io_debug_read_data_MPORT
+      reader => io_instruction_MPORT
+      writer => MPORT
+      read-under-write => undefined
+    mem mem_3 : @[4-soc/src/main/scala/peripheral/Memory.scala 70:24]
+      data-type => UInt<8>
+      depth => 256
+      read-latency => 1
+      write-latency => 1
+      reader => io_bundle_read_data_MPORT
+      reader => io_debug_read_data_MPORT
+      reader => io_instruction_MPORT
+      writer => MPORT
+      read-under-write => undefined
+    node _write_data_vec_0_T = bits(io_bundle_write_data, 7, 0) @[4-soc/src/main/scala/peripheral/Memory.scala 75:48]
+    node _write_data_vec_1_T = bits(io_bundle_write_data, 15, 8) @[4-soc/src/main/scala/peripheral/Memory.scala 75:48]
+    node _write_data_vec_2_T = bits(io_bundle_write_data, 23, 16) @[4-soc/src/main/scala/peripheral/Memory.scala 75:48]
+    node _write_data_vec_3_T = bits(io_bundle_write_data, 31, 24) @[4-soc/src/main/scala/peripheral/Memory.scala 75:48]
+    node _T = dshr(io_bundle_address, UInt<2>("h2")) @[4-soc/src/main/scala/peripheral/Memory.scala 77:34]
+    node _T_1 = bits(_T, 7, 0)
+    node write_data_vec_0 = _write_data_vec_0_T @[4-soc/src/main/scala/peripheral/Memory.scala 73:30 75:25]
+    node _GEN_0 = validif(io_bundle_write_strobe_0, write_data_vec_0)
+    node _GEN_1 = mux(io_bundle_write_strobe_0, UInt<1>("h1"), UInt<1>("h0"))
+    node write_data_vec_1 = _write_data_vec_1_T @[4-soc/src/main/scala/peripheral/Memory.scala 73:30 75:25]
+    node _GEN_2 = validif(io_bundle_write_strobe_1, write_data_vec_1)
+    node _GEN_3 = mux(io_bundle_write_strobe_1, UInt<1>("h1"), UInt<1>("h0"))
+    node write_data_vec_2 = _write_data_vec_2_T @[4-soc/src/main/scala/peripheral/Memory.scala 73:30 75:25]
+    node _GEN_4 = validif(io_bundle_write_strobe_2, write_data_vec_2)
+    node _GEN_5 = mux(io_bundle_write_strobe_2, UInt<1>("h1"), UInt<1>("h0"))
+    node write_data_vec_3 = _write_data_vec_3_T @[4-soc/src/main/scala/peripheral/Memory.scala 73:30 75:25]
+    node _GEN_6 = validif(io_bundle_write_strobe_3, write_data_vec_3)
+    node _GEN_7 = mux(io_bundle_write_strobe_3, UInt<1>("h1"), UInt<1>("h0"))
+    node _GEN_8 = validif(io_bundle_write_enable, _T_1) @[4-soc/src/main/scala/peripheral/Memory.scala 72:32]
+    node _GEN_9 = validif(io_bundle_write_enable, clock) @[4-soc/src/main/scala/peripheral/Memory.scala 72:32]
+    node _GEN_10 = mux(io_bundle_write_enable, UInt<1>("h1"), UInt<1>("h0")) @[4-soc/src/main/scala/peripheral/Memory.scala 70:24 72:32]
+    node _GEN_11 = validif(io_bundle_write_enable, _GEN_1) @[4-soc/src/main/scala/peripheral/Memory.scala 72:32]
+    node _GEN_12 = validif(io_bundle_write_enable, _GEN_3) @[4-soc/src/main/scala/peripheral/Memory.scala 72:32]
+    node _GEN_13 = validif(io_bundle_write_enable, _GEN_5) @[4-soc/src/main/scala/peripheral/Memory.scala 72:32]
+    node _GEN_14 = validif(io_bundle_write_enable, _GEN_7) @[4-soc/src/main/scala/peripheral/Memory.scala 72:32]
+    node _GEN_15 = validif(io_bundle_write_enable, _GEN_0) @[4-soc/src/main/scala/peripheral/Memory.scala 72:32]
+    node _GEN_16 = validif(io_bundle_write_enable, _GEN_2) @[4-soc/src/main/scala/peripheral/Memory.scala 72:32]
+    node _GEN_17 = validif(io_bundle_write_enable, _GEN_4) @[4-soc/src/main/scala/peripheral/Memory.scala 72:32]
+    node _GEN_18 = validif(io_bundle_write_enable, _GEN_6) @[4-soc/src/main/scala/peripheral/Memory.scala 72:32]
+    node _io_bundle_read_data_T = dshr(io_bundle_address, UInt<2>("h2")) @[4-soc/src/main/scala/peripheral/Memory.scala 80:54]
+    node _GEN_19 = validif(UInt<1>("h1"), _io_bundle_read_data_T) @[4-soc/src/main/scala/peripheral/Memory.scala 80:{34,34}]
+    node _io_bundle_read_data_WIRE = _GEN_19 @[4-soc/src/main/scala/peripheral/Memory.scala 80:34]
+    node _io_bundle_read_data_T_1 = or(_io_bundle_read_data_WIRE, UInt<8>("h0")) @[4-soc/src/main/scala/peripheral/Memory.scala 80:34]
+    node _io_bundle_read_data_T_2 = bits(_io_bundle_read_data_T_1, 7, 0) @[4-soc/src/main/scala/peripheral/Memory.scala 80:34]
+    node _GEN_20 = mux(UInt<1>("h1"), UInt<1>("h1"), UInt<1>("h0")) @[4-soc/src/main/scala/peripheral/Memory.scala 70:24 80:{34,34}]
+    node _GEN_21 = validif(UInt<1>("h1"), _io_bundle_read_data_T_2) @[4-soc/src/main/scala/peripheral/Memory.scala 80:{34,34}]
+    node _GEN_22 = validif(UInt<1>("h1"), clock) @[4-soc/src/main/scala/peripheral/Memory.scala 80:{34,34}]
+    node io_bundle_read_data_lo = cat(mem_1.io_bundle_read_data_MPORT.data, mem_0.io_bundle_read_data_MPORT.data) @[4-soc/src/main/scala/peripheral/Memory.scala 80:78]
+    node io_bundle_read_data_hi = cat(mem_3.io_bundle_read_data_MPORT.data, mem_2.io_bundle_read_data_MPORT.data) @[4-soc/src/main/scala/peripheral/Memory.scala 80:78]
+    node _io_bundle_read_data_T_3 = cat(io_bundle_read_data_hi, io_bundle_read_data_lo) @[4-soc/src/main/scala/peripheral/Memory.scala 80:78]
+    node _io_debug_read_data_T = dshr(io_debug_read_address, UInt<2>("h2")) @[4-soc/src/main/scala/peripheral/Memory.scala 81:58]
+    node _GEN_23 = validif(UInt<1>("h1"), _io_debug_read_data_T) @[4-soc/src/main/scala/peripheral/Memory.scala 81:{34,34}]
+    node _io_debug_read_data_WIRE = _GEN_23 @[4-soc/src/main/scala/peripheral/Memory.scala 81:34]
+    node _io_debug_read_data_T_1 = or(_io_debug_read_data_WIRE, UInt<8>("h0")) @[4-soc/src/main/scala/peripheral/Memory.scala 81:34]
+    node _io_debug_read_data_T_2 = bits(_io_debug_read_data_T_1, 7, 0) @[4-soc/src/main/scala/peripheral/Memory.scala 81:34]
+    node _GEN_24 = validif(UInt<1>("h1"), _io_debug_read_data_T_2) @[4-soc/src/main/scala/peripheral/Memory.scala 81:{34,34}]
+    node io_debug_read_data_lo = cat(mem_1.io_debug_read_data_MPORT.data, mem_0.io_debug_read_data_MPORT.data) @[4-soc/src/main/scala/peripheral/Memory.scala 81:82]
+    node io_debug_read_data_hi = cat(mem_3.io_debug_read_data_MPORT.data, mem_2.io_debug_read_data_MPORT.data) @[4-soc/src/main/scala/peripheral/Memory.scala 81:82]
+    node _io_debug_read_data_T_3 = cat(io_debug_read_data_hi, io_debug_read_data_lo) @[4-soc/src/main/scala/peripheral/Memory.scala 81:82]
+    node _io_instruction_T = dshr(io_instruction_address, UInt<2>("h2")) @[4-soc/src/main/scala/peripheral/Memory.scala 82:59]
+    node _GEN_25 = validif(UInt<1>("h1"), _io_instruction_T) @[4-soc/src/main/scala/peripheral/Memory.scala 82:{34,34}]
+    node _io_instruction_WIRE = _GEN_25 @[4-soc/src/main/scala/peripheral/Memory.scala 82:34]
+    node _io_instruction_T_1 = or(_io_instruction_WIRE, UInt<8>("h0")) @[4-soc/src/main/scala/peripheral/Memory.scala 82:34]
+    node _io_instruction_T_2 = bits(_io_instruction_T_1, 7, 0) @[4-soc/src/main/scala/peripheral/Memory.scala 82:34]
+    node _GEN_26 = validif(UInt<1>("h1"), _io_instruction_T_2) @[4-soc/src/main/scala/peripheral/Memory.scala 82:{34,34}]
+    node io_instruction_lo = cat(mem_1.io_instruction_MPORT.data, mem_0.io_instruction_MPORT.data) @[4-soc/src/main/scala/peripheral/Memory.scala 82:83]
+    node io_instruction_hi = cat(mem_3.io_instruction_MPORT.data, mem_2.io_instruction_MPORT.data) @[4-soc/src/main/scala/peripheral/Memory.scala 82:83]
+    node _io_instruction_T_3 = cat(io_instruction_hi, io_instruction_lo) @[4-soc/src/main/scala/peripheral/Memory.scala 82:83]
+    io_bundle_read_data <= _io_bundle_read_data_T_3 @[4-soc/src/main/scala/peripheral/Memory.scala 80:23]
+    io_instruction <= _io_instruction_T_3 @[4-soc/src/main/scala/peripheral/Memory.scala 82:23]
+    io_debug_read_data <= _io_debug_read_data_T_3 @[4-soc/src/main/scala/peripheral/Memory.scala 81:23]
+    mem_0.io_bundle_read_data_MPORT.addr <= _GEN_21
+    mem_1.io_bundle_read_data_MPORT.addr <= _GEN_21
+    mem_2.io_bundle_read_data_MPORT.addr <= _GEN_21
+    mem_3.io_bundle_read_data_MPORT.addr <= _GEN_21
+    mem_0.io_bundle_read_data_MPORT.en <= _GEN_20
+    mem_1.io_bundle_read_data_MPORT.en <= _GEN_20
+    mem_2.io_bundle_read_data_MPORT.en <= _GEN_20
+    mem_3.io_bundle_read_data_MPORT.en <= _GEN_20
+    mem_0.io_bundle_read_data_MPORT.clk <= _GEN_22
+    mem_1.io_bundle_read_data_MPORT.clk <= _GEN_22
+    mem_2.io_bundle_read_data_MPORT.clk <= _GEN_22
+    mem_3.io_bundle_read_data_MPORT.clk <= _GEN_22
+    mem_0.io_debug_read_data_MPORT.addr <= _GEN_24
+    mem_1.io_debug_read_data_MPORT.addr <= _GEN_24
+    mem_2.io_debug_read_data_MPORT.addr <= _GEN_24
+    mem_3.io_debug_read_data_MPORT.addr <= _GEN_24
+    mem_0.io_debug_read_data_MPORT.en <= _GEN_20
+    mem_1.io_debug_read_data_MPORT.en <= _GEN_20
+    mem_2.io_debug_read_data_MPORT.en <= _GEN_20
+    mem_3.io_debug_read_data_MPORT.en <= _GEN_20
+    mem_0.io_debug_read_data_MPORT.clk <= _GEN_22
+    mem_1.io_debug_read_data_MPORT.clk <= _GEN_22
+    mem_2.io_debug_read_data_MPORT.clk <= _GEN_22
+    mem_3.io_debug_read_data_MPORT.clk <= _GEN_22
+    mem_0.io_instruction_MPORT.addr <= _GEN_26
+    mem_1.io_instruction_MPORT.addr <= _GEN_26
+    mem_2.io_instruction_MPORT.addr <= _GEN_26
+    mem_3.io_instruction_MPORT.addr <= _GEN_26
+    mem_0.io_instruction_MPORT.en <= _GEN_20
+    mem_1.io_instruction_MPORT.en <= _GEN_20
+    mem_2.io_instruction_MPORT.en <= _GEN_20
+    mem_3.io_instruction_MPORT.en <= _GEN_20
+    mem_0.io_instruction_MPORT.clk <= _GEN_22
+    mem_1.io_instruction_MPORT.clk <= _GEN_22
+    mem_2.io_instruction_MPORT.clk <= _GEN_22
+    mem_3.io_instruction_MPORT.clk <= _GEN_22
+    mem_0.MPORT.addr <= _GEN_8
+    mem_1.MPORT.addr <= _GEN_8
+    mem_2.MPORT.addr <= _GEN_8
+    mem_3.MPORT.addr <= _GEN_8
+    mem_0.MPORT.en <= _GEN_10
+    mem_1.MPORT.en <= _GEN_10
+    mem_2.MPORT.en <= _GEN_10
+    mem_3.MPORT.en <= _GEN_10
+    mem_0.MPORT.clk <= _GEN_9
+    mem_1.MPORT.clk <= _GEN_9
+    mem_2.MPORT.clk <= _GEN_9
+    mem_3.MPORT.clk <= _GEN_9
+    mem_0.MPORT.data <= _GEN_15
+    mem_1.MPORT.data <= _GEN_16
+    mem_2.MPORT.data <= _GEN_17
+    mem_3.MPORT.data <= _GEN_18
+    mem_0.MPORT.mask <= _GEN_11
+    mem_1.MPORT.mask <= _GEN_12
+    mem_2.MPORT.mask <= _GEN_13
+    mem_3.MPORT.mask <= _GEN_14
+
+  module AXI4LiteMaster :
+    input clock : Clock
+    input reset : UInt<1>
+    output io_channels_write_address_channel_AWVALID : UInt<1> @[4-soc/src/main/scala/bus/AXI4Lite.scala 229:14]
+    input io_channels_write_address_channel_AWREADY : UInt<1> @[4-soc/src/main/scala/bus/AXI4Lite.scala 229:14]
+    output io_channels_write_address_channel_AWADDR : UInt<32> @[4-soc/src/main/scala/bus/AXI4Lite.scala 229:14]
+    output io_channels_write_address_channel_AWPROT : UInt<3> @[4-soc/src/main/scala/bus/AXI4Lite.scala 229:14]
+    output io_channels_write_data_channel_WVALID : UInt<1> @[4-soc/src/main/scala/bus/AXI4Lite.scala 229:14]
+    input io_channels_write_data_channel_WREADY : UInt<1> @[4-soc/src/main/scala/bus/AXI4Lite.scala 229:14]
+    output io_channels_write_data_channel_WDATA : UInt<32> @[4-soc/src/main/scala/bus/AXI4Lite.scala 229:14]
+    output io_channels_write_data_channel_WSTRB : UInt<4> @[4-soc/src/main/scala/bus/AXI4Lite.scala 229:14]
+    input io_channels_write_response_channel_BVALID : UInt<1> @[4-soc/src/main/scala/bus/AXI4Lite.scala 229:14]
+    output io_channels_write_response_channel_BREADY : UInt<1> @[4-soc/src/main/scala/bus/AXI4Lite.scala 229:14]
+    input io_channels_write_response_channel_BRESP : UInt<2> @[4-soc/src/main/scala/bus/AXI4Lite.scala 229:14]
+    output io_channels_read_address_channel_ARVALID : UInt<1> @[4-soc/src/main/scala/bus/AXI4Lite.scala 229:14]
+    input io_channels_read_address_channel_ARREADY : UInt<1> @[4-soc/src/main/scala/bus/AXI4Lite.scala 229:14]
+    output io_channels_read_address_channel_ARADDR : UInt<32> @[4-soc/src/main/scala/bus/AXI4Lite.scala 229:14]
+    output io_channels_read_address_channel_ARPROT : UInt<3> @[4-soc/src/main/scala/bus/AXI4Lite.scala 229:14]
+    input io_channels_read_data_channel_RVALID : UInt<1> @[4-soc/src/main/scala/bus/AXI4Lite.scala 229:14]
+    output io_channels_read_data_channel_RREADY : UInt<1> @[4-soc/src/main/scala/bus/AXI4Lite.scala 229:14]
+    input io_channels_read_data_channel_RDATA : UInt<32> @[4-soc/src/main/scala/bus/AXI4Lite.scala 229:14]
+    input io_channels_read_data_channel_RRESP : UInt<2> @[4-soc/src/main/scala/bus/AXI4Lite.scala 229:14]
+    input io_bundle_address : UInt<32> @[4-soc/src/main/scala/bus/AXI4Lite.scala 229:14]
+    input io_bundle_read : UInt<1> @[4-soc/src/main/scala/bus/AXI4Lite.scala 229:14]
+    input io_bundle_write : UInt<1> @[4-soc/src/main/scala/bus/AXI4Lite.scala 229:14]
+    output io_bundle_read_data : UInt<32> @[4-soc/src/main/scala/bus/AXI4Lite.scala 229:14]
+    input io_bundle_write_data : UInt<32> @[4-soc/src/main/scala/bus/AXI4Lite.scala 229:14]
+    input io_bundle_write_strobe_0 : UInt<1> @[4-soc/src/main/scala/bus/AXI4Lite.scala 229:14]
+    input io_bundle_write_strobe_1 : UInt<1> @[4-soc/src/main/scala/bus/AXI4Lite.scala 229:14]
+    input io_bundle_write_strobe_2 : UInt<1> @[4-soc/src/main/scala/bus/AXI4Lite.scala 229:14]
+    input io_bundle_write_strobe_3 : UInt<1> @[4-soc/src/main/scala/bus/AXI4Lite.scala 229:14]
+    output io_bundle_busy : UInt<1> @[4-soc/src/main/scala/bus/AXI4Lite.scala 229:14]
+    output io_bundle_read_valid : UInt<1> @[4-soc/src/main/scala/bus/AXI4Lite.scala 229:14]
+    output io_bundle_write_valid : UInt<1> @[4-soc/src/main/scala/bus/AXI4Lite.scala 229:14]
+    output io_bundle_write_data_accepted : UInt<1> @[4-soc/src/main/scala/bus/AXI4Lite.scala 229:14]
+
+    reg state : UInt<3>, clock with :
+      reset => (UInt<1>("h0"), state) @[4-soc/src/main/scala/bus/AXI4Lite.scala 234:22]
+    node _io_bundle_busy_T = neq(state, UInt<1>("h0")) @[4-soc/src/main/scala/bus/AXI4Lite.scala 235:27]
+    reg addr : UInt<32>, clock with :
+      reset => (UInt<1>("h0"), addr) @[4-soc/src/main/scala/bus/AXI4Lite.scala 237:21]
+    reg read_valid : UInt<1>, clock with :
+      reset => (UInt<1>("h0"), read_valid) @[4-soc/src/main/scala/bus/AXI4Lite.scala 242:27]
+    reg read_data : UInt<32>, clock with :
+      reset => (UInt<1>("h0"), read_data) @[4-soc/src/main/scala/bus/AXI4Lite.scala 244:26]
+    reg ARVALID : UInt<1>, clock with :
+      reset => (UInt<1>("h0"), ARVALID) @[4-soc/src/main/scala/bus/AXI4Lite.scala 247:24]
+    reg RREADY : UInt<1>, clock with :
+      reset => (UInt<1>("h0"), RREADY) @[4-soc/src/main/scala/bus/AXI4Lite.scala 249:23]
+    reg write_valid : UInt<1>, clock with :
+      reset => (UInt<1>("h0"), write_valid) @[4-soc/src/main/scala/bus/AXI4Lite.scala 255:28]
+    reg write_data : UInt<32>, clock with :
+      reset => (UInt<1>("h0"), write_data) @[4-soc/src/main/scala/bus/AXI4Lite.scala 257:27]
+    reg write_strobe_0 : UInt<1>, clock with :
+      reset => (UInt<1>("h0"), write_strobe_0) @[4-soc/src/main/scala/bus/AXI4Lite.scala 259:29]
+    reg write_strobe_1 : UInt<1>, clock with :
+      reset => (UInt<1>("h0"), write_strobe_1) @[4-soc/src/main/scala/bus/AXI4Lite.scala 259:29]
+    reg write_strobe_2 : UInt<1>, clock with :
+      reset => (UInt<1>("h0"), write_strobe_2) @[4-soc/src/main/scala/bus/AXI4Lite.scala 259:29]
+    reg write_strobe_3 : UInt<1>, clock with :
+      reset => (UInt<1>("h0"), write_strobe_3) @[4-soc/src/main/scala/bus/AXI4Lite.scala 259:29]
+    node io_channels_write_data_channel_WSTRB_lo = cat(write_strobe_1, write_strobe_0) @[4-soc/src/main/scala/bus/AXI4Lite.scala 260:56]
+    node io_channels_write_data_channel_WSTRB_hi = cat(write_strobe_3, write_strobe_2) @[4-soc/src/main/scala/bus/AXI4Lite.scala 260:56]
+    node _io_channels_write_data_channel_WSTRB_T = cat(io_channels_write_data_channel_WSTRB_hi, io_channels_write_data_channel_WSTRB_lo) @[4-soc/src/main/scala/bus/AXI4Lite.scala 260:56]
+    reg AWVALID : UInt<1>, clock with :
+      reset => (UInt<1>("h0"), AWVALID) @[4-soc/src/main/scala/bus/AXI4Lite.scala 262:24]
+    reg WVALID : UInt<1>, clock with :
+      reset => (UInt<1>("h0"), WVALID) @[4-soc/src/main/scala/bus/AXI4Lite.scala 264:23]
+    reg BREADY : UInt<1>, clock with :
+      reset => (UInt<1>("h0"), BREADY) @[4-soc/src/main/scala/bus/AXI4Lite.scala 266:23]
+    reg write_data_accepted : UInt<1>, clock with :
+      reset => (UInt<1>("h0"), write_data_accepted) @[4-soc/src/main/scala/bus/AXI4Lite.scala 270:36]
+    node _T = asUInt(UInt<1>("h0")) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17]
+    node _T_1 = asUInt(state) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17]
+    node _T_2 = eq(_T, _T_1) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17]
+    node _T_3 = eq(io_bundle_write, UInt<1>("h0")) @[4-soc/src/main/scala/bus/AXI4Lite.scala 285:30]
+    node _T_4 = and(io_bundle_read, _T_3) @[4-soc/src/main/scala/bus/AXI4Lite.scala 285:27]
+    node _GEN_0 = mux(io_bundle_write, io_bundle_address, addr) @[4-soc/src/main/scala/bus/AXI4Lite.scala 237:21 291:35 293:22]
+    node _GEN_1 = mux(io_bundle_write, io_bundle_write_data, write_data) @[4-soc/src/main/scala/bus/AXI4Lite.scala 291:35 294:22 257:27]
+    node _GEN_2 = mux(io_bundle_write, io_bundle_write_strobe_0, write_strobe_0) @[4-soc/src/main/scala/bus/AXI4Lite.scala 291:35 295:22 259:29]
+    node _GEN_3 = mux(io_bundle_write, io_bundle_write_strobe_1, write_strobe_1) @[4-soc/src/main/scala/bus/AXI4Lite.scala 291:35 295:22 259:29]
+    node _GEN_4 = mux(io_bundle_write, io_bundle_write_strobe_2, write_strobe_2) @[4-soc/src/main/scala/bus/AXI4Lite.scala 291:35 295:22 259:29]
+    node _GEN_5 = mux(io_bundle_write, io_bundle_write_strobe_3, write_strobe_3) @[4-soc/src/main/scala/bus/AXI4Lite.scala 291:35 295:22 259:29]
+    node _GEN_6 = mux(io_bundle_write, UInt<1>("h1"), AWVALID) @[4-soc/src/main/scala/bus/AXI4Lite.scala 291:35 296:22 262:24]
+    node _GEN_7 = mux(io_bundle_write, UInt<1>("h1"), WVALID) @[4-soc/src/main/scala/bus/AXI4Lite.scala 291:35 297:22 264:23]
+    node _GEN_8 = mux(io_bundle_write, UInt<3>("h4"), state) @[4-soc/src/main/scala/bus/AXI4Lite.scala 234:22 291:35 298:22]
+    node _GEN_9 = mux(_T_4, io_bundle_address, _GEN_0) @[4-soc/src/main/scala/bus/AXI4Lite.scala 285:48 287:17]
+    node _GEN_10 = mux(_T_4, UInt<1>("h1"), ARVALID) @[4-soc/src/main/scala/bus/AXI4Lite.scala 285:48 288:17 247:24]
+    node _GEN_11 = mux(_T_4, UInt<1>("h1"), RREADY) @[4-soc/src/main/scala/bus/AXI4Lite.scala 285:48 289:17 249:23]
+    node _GEN_12 = mux(_T_4, UInt<2>("h2"), _GEN_8) @[4-soc/src/main/scala/bus/AXI4Lite.scala 285:48 290:17]
+    node _GEN_13 = mux(_T_4, write_data, _GEN_1) @[4-soc/src/main/scala/bus/AXI4Lite.scala 257:27 285:48]
+    node _GEN_14 = mux(_T_4, write_strobe_0, _GEN_2) @[4-soc/src/main/scala/bus/AXI4Lite.scala 259:29 285:48]
+    node _GEN_15 = mux(_T_4, write_strobe_1, _GEN_3) @[4-soc/src/main/scala/bus/AXI4Lite.scala 259:29 285:48]
+    node _GEN_16 = mux(_T_4, write_strobe_2, _GEN_4) @[4-soc/src/main/scala/bus/AXI4Lite.scala 259:29 285:48]
+    node _GEN_17 = mux(_T_4, write_strobe_3, _GEN_5) @[4-soc/src/main/scala/bus/AXI4Lite.scala 259:29 285:48]
+    node _GEN_18 = mux(_T_4, AWVALID, _GEN_6) @[4-soc/src/main/scala/bus/AXI4Lite.scala 262:24 285:48]
+    node _GEN_19 = mux(_T_4, WVALID, _GEN_7) @[4-soc/src/main/scala/bus/AXI4Lite.scala 264:23 285:48]
+    node _T_5 = asUInt(UInt<2>("h2")) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17]
+    node _T_6 = asUInt(state) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17]
+    node _T_7 = eq(_T_5, _T_6) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17]
+    node _T_8 = and(ARVALID, io_channels_read_address_channel_ARREADY) @[4-soc/src/main/scala/bus/AXI4Lite.scala 304:20]
+    node _GEN_20 = mux(_T_8, UInt<1>("h0"), ARVALID) @[4-soc/src/main/scala/bus/AXI4Lite.scala 304:65 305:17 247:24]
+    node _T_9 = and(io_channels_read_data_channel_RVALID, RREADY) @[4-soc/src/main/scala/bus/AXI4Lite.scala 308:49]
+    node _GEN_21 = mux(_T_9, io_channels_read_data_channel_RDATA, read_data) @[4-soc/src/main/scala/bus/AXI4Lite.scala 308:60 310:20 244:26]
+    node _GEN_22 = mux(_T_9, UInt<1>("h0"), RREADY) @[4-soc/src/main/scala/bus/AXI4Lite.scala 308:60 311:20 249:23]
+    node _GEN_23 = mux(_T_9, UInt<1>("h1"), read_valid) @[4-soc/src/main/scala/bus/AXI4Lite.scala 308:60 312:20 242:27]
+    node _GEN_24 = mux(_T_9, UInt<1>("h0"), state) @[4-soc/src/main/scala/bus/AXI4Lite.scala 308:60 313:20 234:22]
+    node _T_10 = asUInt(UInt<3>("h4")) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17]
+    node _T_11 = asUInt(state) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17]
+    node _T_12 = eq(_T_10, _T_11) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17]
+    node _T_13 = and(AWVALID, io_channels_write_address_channel_AWREADY) @[4-soc/src/main/scala/bus/AXI4Lite.scala 319:20]
+    node _GEN_25 = mux(_T_13, UInt<1>("h0"), AWVALID) @[4-soc/src/main/scala/bus/AXI4Lite.scala 319:66 320:17 262:24]
+    node _T_14 = and(WVALID, io_channels_write_data_channel_WREADY) @[4-soc/src/main/scala/bus/AXI4Lite.scala 323:19]
+    node _GEN_26 = mux(_T_14, UInt<1>("h0"), WVALID) @[4-soc/src/main/scala/bus/AXI4Lite.scala 264:23 323:61 325:29]
+    node _GEN_27 = mux(_T_14, UInt<1>("h1"), BREADY) @[4-soc/src/main/scala/bus/AXI4Lite.scala 266:23 323:61 326:29]
+    node _GEN_28 = mux(_T_14, UInt<1>("h1"), write_data_accepted) @[4-soc/src/main/scala/bus/AXI4Lite.scala 323:61 327:29 270:36]
+    node _GEN_29 = mux(_T_14, UInt<3>("h5"), state) @[4-soc/src/main/scala/bus/AXI4Lite.scala 234:22 323:61 328:29]
+    node _T_15 = asUInt(UInt<3>("h5")) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17]
+    node _T_16 = asUInt(state) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17]
+    node _T_17 = eq(_T_15, _T_16) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17]
+    node _T_18 = and(AWVALID, io_channels_write_address_channel_AWREADY) @[4-soc/src/main/scala/bus/AXI4Lite.scala 335:20]
+    node _GEN_30 = mux(_T_18, UInt<1>("h0"), AWVALID) @[4-soc/src/main/scala/bus/AXI4Lite.scala 335:66 336:17 262:24]
+    node _T_19 = and(io_channels_write_response_channel_BVALID, BREADY) @[4-soc/src/main/scala/bus/AXI4Lite.scala 339:54]
+    node _GEN_31 = mux(_T_19, UInt<1>("h0"), BREADY) @[4-soc/src/main/scala/bus/AXI4Lite.scala 339:65 341:21 266:23]
+    node _GEN_32 = mux(_T_19, UInt<1>("h1"), write_valid) @[4-soc/src/main/scala/bus/AXI4Lite.scala 339:65 342:21 255:28]
+    node _GEN_33 = mux(_T_19, UInt<1>("h0"), state) @[4-soc/src/main/scala/bus/AXI4Lite.scala 339:65 343:21 234:22]
+    node _T_20 = asUInt(UInt<1>("h1")) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17]
+    node _T_21 = asUInt(state) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17]
+    node _T_22 = eq(_T_20, _T_21) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17]
+    node _T_23 = asUInt(UInt<2>("h3")) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17]
+    node _T_24 = asUInt(state) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17]
+    node _T_25 = eq(_T_23, _T_24) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17]
+    node _GEN_34 = mux(_T_25, UInt<1>("h0"), state) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17 352:13 234:22]
+    node _GEN_35 = mux(_T_22, UInt<1>("h0"), _GEN_34) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17 349:13]
+    node _GEN_36 = mux(_T_17, _GEN_30, AWVALID) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17 262:24]
+    node _GEN_37 = mux(_T_17, _GEN_31, BREADY) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17 266:23]
+    node _GEN_38 = mux(_T_17, _GEN_32, write_valid) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17 255:28]
+    node _GEN_39 = mux(_T_17, _GEN_33, _GEN_35) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17]
+    node _GEN_40 = mux(_T_12, _GEN_25, _GEN_36) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17]
+    node _GEN_41 = mux(_T_12, _GEN_26, WVALID) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17 264:23]
+    node _GEN_42 = mux(_T_12, _GEN_27, _GEN_37) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17]
+    node _GEN_43 = mux(_T_12, _GEN_28, write_data_accepted) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17 270:36]
+    node _GEN_44 = mux(_T_12, _GEN_29, _GEN_39) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17]
+    node _GEN_45 = mux(_T_12, write_valid, _GEN_38) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17 255:28]
+    node _GEN_46 = mux(_T_7, _GEN_20, ARVALID) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17 247:24]
+    node _GEN_47 = mux(_T_7, _GEN_21, read_data) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17 244:26]
+    node _GEN_48 = mux(_T_7, _GEN_22, RREADY) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17 249:23]
+    node _GEN_49 = mux(_T_7, _GEN_23, read_valid) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17 242:27]
+    node _GEN_50 = mux(_T_7, _GEN_24, _GEN_44) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17]
+    node _GEN_51 = mux(_T_7, AWVALID, _GEN_40) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17 262:24]
+    node _GEN_52 = mux(_T_7, WVALID, _GEN_41) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17 264:23]
+    node _GEN_53 = mux(_T_7, BREADY, _GEN_42) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17 266:23]
+    node _GEN_54 = mux(_T_7, write_data_accepted, _GEN_43) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17 270:36]
+    node _GEN_55 = mux(_T_7, write_valid, _GEN_45) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17 255:28]
+    node _GEN_56 = mux(_T_2, UInt<1>("h0"), _GEN_49) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17 281:27]
+    node _GEN_57 = mux(_T_2, UInt<1>("h0"), _GEN_55) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17 282:27]
+    node _GEN_58 = mux(_T_2, UInt<1>("h0"), _GEN_54) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17 283:27]
+    node _GEN_59 = mux(_T_2, _GEN_9, addr) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17 237:21]
+    node _GEN_60 = mux(_T_2, _GEN_10, _GEN_46) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17]
+    node _GEN_61 = mux(_T_2, _GEN_11, _GEN_48) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17]
+    node _GEN_62 = mux(_T_2, _GEN_12, _GEN_50) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17]
+    node _GEN_63 = mux(_T_2, _GEN_13, write_data) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17 257:27]
+    node _GEN_64 = mux(_T_2, _GEN_14, write_strobe_0) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17 259:29]
+    node _GEN_65 = mux(_T_2, _GEN_15, write_strobe_1) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17 259:29]
+    node _GEN_66 = mux(_T_2, _GEN_16, write_strobe_2) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17 259:29]
+    node _GEN_67 = mux(_T_2, _GEN_17, write_strobe_3) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17 259:29]
+    node _GEN_68 = mux(_T_2, _GEN_18, _GEN_51) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17]
+    node _GEN_69 = mux(_T_2, _GEN_19, _GEN_52) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17]
+    node _GEN_70 = mux(_T_2, read_data, _GEN_47) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17 244:26]
+    node _GEN_71 = mux(_T_2, BREADY, _GEN_53) @[4-soc/src/main/scala/bus/AXI4Lite.scala 279:17 266:23]
+    node _write_strobe_WIRE_0 = UInt<1>("h0") @[4-soc/src/main/scala/bus/AXI4Lite.scala 259:{37,37}]
+    node _write_strobe_WIRE_1 = UInt<1>("h0") @[4-soc/src/main/scala/bus/AXI4Lite.scala 259:{37,37}]
+    node _write_strobe_WIRE_2 = UInt<1>("h0") @[4-soc/src/main/scala/bus/AXI4Lite.scala 259:{37,37}]
+    node _write_strobe_WIRE_3 = UInt<1>("h0") @[4-soc/src/main/scala/bus/AXI4Lite.scala 259:{37,37}]
+    io_channels_write_address_channel_AWVALID <= AWVALID @[4-soc/src/main/scala/bus/AXI4Lite.scala 263:45]
+    io_channels_write_address_channel_AWADDR <= addr @[4-soc/src/main/scala/bus/AXI4Lite.scala 239:44]
+    io_channels_write_address_channel_AWPROT <= UInt<3>("h0") @[4-soc/src/main/scala/bus/AXI4Lite.scala 273:44]
+    io_channels_write_data_channel_WVALID <= WVALID @[4-soc/src/main/scala/bus/AXI4Lite.scala 265:41]
+    io_channels_write_data_channel_WDATA <= write_data @[4-soc/src/main/scala/bus/AXI4Lite.scala 258:40]
+    io_channels_write_data_channel_WSTRB <= _io_channels_write_data_channel_WSTRB_T @[4-soc/src/main/scala/bus/AXI4Lite.scala 260:40]
+    io_channels_write_response_channel_BREADY <= BREADY @[4-soc/src/main/scala/bus/AXI4Lite.scala 267:45]
+    io_channels_read_address_channel_ARVALID <= ARVALID @[4-soc/src/main/scala/bus/AXI4Lite.scala 248:44]
+    io_channels_read_address_channel_ARADDR <= addr @[4-soc/src/main/scala/bus/AXI4Lite.scala 238:44]
+    io_channels_read_address_channel_ARPROT <= UInt<3>("h0") @[4-soc/src/main/scala/bus/AXI4Lite.scala 252:43]
+    io_channels_read_data_channel_RREADY <= RREADY @[4-soc/src/main/scala/bus/AXI4Lite.scala 250:40]
+    io_bundle_read_data <= read_data @[4-soc/src/main/scala/bus/AXI4Lite.scala 245:23]
+    io_bundle_busy <= _io_bundle_busy_T @[4-soc/src/main/scala/bus/AXI4Lite.scala 235:18]
+    io_bundle_read_valid <= read_valid @[4-soc/src/main/scala/bus/AXI4Lite.scala 243:24]
+    io_bundle_write_valid <= write_valid @[4-soc/src/main/scala/bus/AXI4Lite.scala 256:25]
+    io_bundle_write_data_accepted <= write_data_accepted @[4-soc/src/main/scala/bus/AXI4Lite.scala 271:33]
+    state <= mux(reset, UInt<1>("h0"), _GEN_62) @[4-soc/src/main/scala/bus/AXI4Lite.scala 234:{22,22}]
+    addr <= mux(reset, UInt<32>("h0"), _GEN_59) @[4-soc/src/main/scala/bus/AXI4Lite.scala 237:{21,21}]
+    read_valid <= mux(reset, UInt<1>("h0"), _GEN_56) @[4-soc/src/main/scala/bus/AXI4Lite.scala 242:{27,27}]
+    read_data <= mux(reset, UInt<32>("h0"), _GEN_70) @[4-soc/src/main/scala/bus/AXI4Lite.scala 244:{26,26}]
+    ARVALID <= mux(reset, UInt<1>("h0"), _GEN_60) @[4-soc/src/main/scala/bus/AXI4Lite.scala 247:{24,24}]
+    RREADY <= mux(reset, UInt<1>("h0"), _GEN_61) @[4-soc/src/main/scala/bus/AXI4Lite.scala 249:{23,23}]
+    write_valid <= mux(reset, UInt<1>("h0"), _GEN_57) @[4-soc/src/main/scala/bus/AXI4Lite.scala 255:{28,28}]
+    write_data <= mux(reset, UInt<32>("h0"), _GEN_63) @[4-soc/src/main/scala/bus/AXI4Lite.scala 257:{27,27}]
+    write_strobe_0 <= mux(reset, _write_strobe_WIRE_0, _GEN_64) @[4-soc/src/main/scala/bus/AXI4Lite.scala 259:{29,29}]
+    write_strobe_1 <= mux(reset, _write_strobe_WIRE_1, _GEN_65) @[4-soc/src/main/scala/bus/AXI4Lite.scala 259:{29,29}]
+    write_strobe_2 <= mux(reset, _write_strobe_WIRE_2, _GEN_66) @[4-soc/src/main/scala/bus/AXI4Lite.scala 259:{29,29}]
+    write_strobe_3 <= mux(reset, _write_strobe_WIRE_3, _GEN_67) @[4-soc/src/main/scala/bus/AXI4Lite.scala 259:{29,29}]
+    AWVALID <= mux(reset, UInt<1>("h0"), _GEN_68) @[4-soc/src/main/scala/bus/AXI4Lite.scala 262:{24,24}]
+    WVALID <= mux(reset, UInt<1>("h0"), _GEN_69) @[4-soc/src/main/scala/bus/AXI4Lite.scala 264:{23,23}]
+    BREADY <= mux(reset, UInt<1>("h0"), _GEN_71) @[4-soc/src/main/scala/bus/AXI4Lite.scala 266:{23,23}]
+    write_data_accepted <= mux(reset, UInt<1>("h0"), _GEN_58) @[4-soc/src/main/scala/bus/AXI4Lite.scala 270:{36,36}]
+
+  module AXI4LiteSlave :
+    input clock : Clock
+    input reset : UInt<1>
+    input io_channels_write_address_channel_AWVALID : UInt<1> @[4-soc/src/main/scala/bus/AXI4Lite.scala 111:14]
+    output io_channels_write_address_channel_AWREADY : UInt<1> @[4-soc/src/main/scala/bus/AXI4Lite.scala 111:14]
+    input io_channels_write_address_channel_AWADDR : UInt<32> @[4-soc/src/main/scala/bus/AXI4Lite.scala 111:14]
+    input io_channels_write_address_channel_AWPROT : UInt<3> @[4-soc/src/main/scala/bus/AXI4Lite.scala 111:14]
+    input io_channels_write_data_channel_WVALID : UInt<1> @[4-soc/src/main/scala/bus/AXI4Lite.scala 111:14]
+    output io_channels_write_data_channel_WREADY : UInt<1> @[4-soc/src/main/scala/bus/AXI4Lite.scala 111:14]
+    input io_channels_write_data_channel_WDATA : UInt<32> @[4-soc/src/main/scala/bus/AXI4Lite.scala 111:14]
+    input io_channels_write_data_channel_WSTRB : UInt<4> @[4-soc/src/main/scala/bus/AXI4Lite.scala 111:14]
+    output io_channels_write_response_channel_BVALID : UInt<1> @[4-soc/src/main/scala/bus/AXI4Lite.scala 111:14]
+    input io_channels_write_response_channel_BREADY : UInt<1> @[4-soc/src/main/scala/bus/AXI4Lite.scala 111:14]
+    output io_channels_write_response_channel_BRESP : UInt<2> @[4-soc/src/main/scala/bus/AXI4Lite.scala 111:14]
+    input io_channels_read_address_channel_ARVALID : UInt<1> @[4-soc/src/main/scala/bus/AXI4Lite.scala 111:14]
+    output io_channels_read_address_channel_ARREADY : UInt<1> @[4-soc/src/main/scala/bus/AXI4Lite.scala 111:14]
+    input io_channels_read_address_channel_ARADDR : UInt<32> @[4-soc/src/main/scala/bus/AXI4Lite.scala 111:14]
+    input io_channels_read_address_channel_ARPROT : UInt<3> @[4-soc/src/main/scala/bus/AXI4Lite.scala 111:14]
+    output io_channels_read_data_channel_RVALID : UInt<1> @[4-soc/src/main/scala/bus/AXI4Lite.scala 111:14]
+    input io_channels_read_data_channel_RREADY : UInt<1> @[4-soc/src/main/scala/bus/AXI4Lite.scala 111:14]
+    output io_channels_read_data_channel_RDATA : UInt<32> @[4-soc/src/main/scala/bus/AXI4Lite.scala 111:14]
+    output io_channels_read_data_channel_RRESP : UInt<2> @[4-soc/src/main/scala/bus/AXI4Lite.scala 111:14]
+    output io_bundle_address : UInt<32> @[4-soc/src/main/scala/bus/AXI4Lite.scala 111:14]
+    output io_bundle_read : UInt<1> @[4-soc/src/main/scala/bus/AXI4Lite.scala 111:14]
+    input io_bundle_read_data : UInt<32> @[4-soc/src/main/scala/bus/AXI4Lite.scala 111:14]
+    input io_bundle_read_valid : UInt<1> @[4-soc/src/main/scala/bus/AXI4Lite.scala 111:14]
+    output io_bundle_write : UInt<1> @[4-soc/src/main/scala/bus/AXI4Lite.scala 111:14]
+    output io_bundle_write_data : UInt<32> @[4-soc/src/main/scala/bus/AXI4Lite.scala 111:14]
+    output io_bundle_write_strobe_0 : UInt<1> @[4-soc/src/main/scala/bus/AXI4Lite.scala 111:14]
+    output io_bundle_write_strobe_1 : UInt<1> @[4-soc/src/main/scala/bus/AXI4Lite.scala 111:14]
+    output io_bundle_write_strobe_2 : UInt<1> @[4-soc/src/main/scala/bus/AXI4Lite.scala 111:14]
+    output io_bundle_write_strobe_3 : UInt<1> @[4-soc/src/main/scala/bus/AXI4Lite.scala 111:14]
+
+    reg state : UInt<3>, clock with :
+      reset => (UInt<1>("h0"), state) @[4-soc/src/main/scala/bus/AXI4Lite.scala 116:22]
+    reg addr : UInt<32>, clock with :
+      reset => (UInt<1>("h0"), addr) @[4-soc/src/main/scala/bus/AXI4Lite.scala 118:21]
+    reg read : UInt<1>, clock with :
+      reset => (UInt<1>("h0"), read) @[4-soc/src/main/scala/bus/AXI4Lite.scala 122:21]
+    reg read_data : UInt<32>, clock with :
+      reset => (UInt<1>("h0"), read_data) @[4-soc/src/main/scala/bus/AXI4Lite.scala 124:26]
+    reg ARREADY : UInt<1>, clock with :
+      reset => (UInt<1>("h0"), ARREADY) @[4-soc/src/main/scala/bus/AXI4Lite.scala 127:24]
+    reg RVALID : UInt<1>, clock with :
+      reset => (UInt<1>("h0"), RVALID) @[4-soc/src/main/scala/bus/AXI4Lite.scala 129:23]
+    reg RRESP : UInt<2>, clock with :
+      reset => (UInt<1>("h0"), RRESP) @[4-soc/src/main/scala/bus/AXI4Lite.scala 131:22]
+    reg write : UInt<1>, clock with :
+      reset => (UInt<1>("h0"), write) @[4-soc/src/main/scala/bus/AXI4Lite.scala 135:22]
+    reg write_data : UInt<32>, clock with :
+      reset => (UInt<1>("h0"), write_data) @[4-soc/src/main/scala/bus/AXI4Lite.scala 137:27]
+    reg write_strobe_0 : UInt<1>, clock with :
+      reset => (UInt<1>("h0"), write_strobe_0) @[4-soc/src/main/scala/bus/AXI4Lite.scala 139:29]
+    reg write_strobe_1 : UInt<1>, clock with :
+      reset => (UInt<1>("h0"), write_strobe_1) @[4-soc/src/main/scala/bus/AXI4Lite.scala 139:29]
+    reg write_strobe_2 : UInt<1>, clock with :
+      reset => (UInt<1>("h0"), write_strobe_2) @[4-soc/src/main/scala/bus/AXI4Lite.scala 139:29]
+    reg write_strobe_3 : UInt<1>, clock with :
+      reset => (UInt<1>("h0"), write_strobe_3) @[4-soc/src/main/scala/bus/AXI4Lite.scala 139:29]
+    reg AWREADY : UInt<1>, clock with :
+      reset => (UInt<1>("h0"), AWREADY) @[4-soc/src/main/scala/bus/AXI4Lite.scala 142:24]
+    reg WREADY : UInt<1>, clock with :
+      reset => (UInt<1>("h0"), WREADY) @[4-soc/src/main/scala/bus/AXI4Lite.scala 144:23]
+    reg BVALID : UInt<1>, clock with :
+      reset => (UInt<1>("h0"), BVALID) @[4-soc/src/main/scala/bus/AXI4Lite.scala 146:23]
+    node _T = asUInt(UInt<1>("h0")) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17]
+    node _T_1 = asUInt(state) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17]
+    node _T_2 = eq(_T, _T_1) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17]
+    node _GEN_0 = mux(io_channels_write_address_channel_AWVALID, UInt<2>("h3"), state) @[4-soc/src/main/scala/bus/AXI4Lite.scala 160:61 162:17 116:22]
+    node _GEN_1 = mux(io_channels_write_address_channel_AWVALID, UInt<1>("h1"), AWREADY) @[4-soc/src/main/scala/bus/AXI4Lite.scala 160:61 163:17 142:24]
+    node _GEN_2 = mux(io_channels_read_address_channel_ARVALID, UInt<1>("h1"), _GEN_0) @[4-soc/src/main/scala/bus/AXI4Lite.scala 156:54 158:17]
+    node _GEN_3 = mux(io_channels_read_address_channel_ARVALID, UInt<1>("h1"), ARREADY) @[4-soc/src/main/scala/bus/AXI4Lite.scala 156:54 159:17 127:24]
+    node _GEN_4 = mux(io_channels_read_address_channel_ARVALID, AWREADY, _GEN_1) @[4-soc/src/main/scala/bus/AXI4Lite.scala 142:24 156:54]
+    node _T_3 = asUInt(UInt<1>("h1")) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17]
+    node _T_4 = asUInt(state) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17]
+    node _T_5 = eq(_T_3, _T_4) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17]
+    node _T_6 = and(io_channels_read_address_channel_ARVALID, ARREADY) @[4-soc/src/main/scala/bus/AXI4Lite.scala 168:53]
+    node _GEN_5 = mux(_T_6, io_channels_read_address_channel_ARADDR, addr) @[4-soc/src/main/scala/bus/AXI4Lite.scala 168:65 170:17 118:21]
+    node _GEN_6 = mux(_T_6, UInt<1>("h0"), ARREADY) @[4-soc/src/main/scala/bus/AXI4Lite.scala 168:65 171:17 127:24]
+    node _GEN_7 = mux(_T_6, UInt<1>("h1"), read) @[4-soc/src/main/scala/bus/AXI4Lite.scala 168:65 172:17 122:21]
+    node _GEN_8 = mux(_T_6, UInt<2>("h2"), state) @[4-soc/src/main/scala/bus/AXI4Lite.scala 168:65 173:17 116:22]
+    node _T_7 = asUInt(UInt<2>("h2")) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17]
+    node _T_8 = asUInt(state) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17]
+    node _T_9 = eq(_T_7, _T_8) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17]
+    node _GEN_9 = mux(io_bundle_read_valid, io_bundle_read_data, read_data) @[4-soc/src/main/scala/bus/AXI4Lite.scala 178:34 180:19 124:26]
+    node _GEN_10 = mux(io_bundle_read_valid, UInt<1>("h1"), RVALID) @[4-soc/src/main/scala/bus/AXI4Lite.scala 178:34 181:19 129:23]
+    node _GEN_11 = mux(io_bundle_read_valid, UInt<1>("h0"), RRESP) @[4-soc/src/main/scala/bus/AXI4Lite.scala 178:34 182:19 131:22]
+    node _GEN_12 = mux(io_bundle_read_valid, UInt<1>("h0"), read) @[4-soc/src/main/scala/bus/AXI4Lite.scala 178:34 183:19 122:21]
+    node _T_10 = and(RVALID, io_channels_read_data_channel_RREADY) @[4-soc/src/main/scala/bus/AXI4Lite.scala 186:19]
+    node _GEN_13 = mux(_T_10, UInt<1>("h0"), _GEN_10) @[4-soc/src/main/scala/bus/AXI4Lite.scala 186:60 188:16]
+    node _GEN_14 = mux(_T_10, UInt<1>("h0"), state) @[4-soc/src/main/scala/bus/AXI4Lite.scala 186:60 189:16 116:22]
+    node _T_11 = asUInt(UInt<2>("h3")) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17]
+    node _T_12 = asUInt(state) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17]
+    node _T_13 = eq(_T_11, _T_12) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17]
+    node _T_14 = and(io_channels_write_address_channel_AWVALID, AWREADY) @[4-soc/src/main/scala/bus/AXI4Lite.scala 194:54]
+    node _GEN_15 = mux(_T_14, io_channels_write_address_channel_AWADDR, addr) @[4-soc/src/main/scala/bus/AXI4Lite.scala 194:66 196:17 118:21]
+    node _GEN_16 = mux(_T_14, UInt<1>("h0"), AWREADY) @[4-soc/src/main/scala/bus/AXI4Lite.scala 194:66 197:17 142:24]
+    node _GEN_17 = mux(_T_14, UInt<1>("h1"), WREADY) @[4-soc/src/main/scala/bus/AXI4Lite.scala 194:66 198:17 144:23]
+    node _GEN_18 = mux(_T_14, UInt<3>("h4"), state) @[4-soc/src/main/scala/bus/AXI4Lite.scala 194:66 199:17 116:22]
+    node _T_15 = asUInt(UInt<3>("h4")) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17]
+    node _T_16 = asUInt(state) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17]
+    node _T_17 = eq(_T_15, _T_16) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17]
+    node _T_18 = and(io_channels_write_data_channel_WVALID, WREADY) @[4-soc/src/main/scala/bus/AXI4Lite.scala 204:50]
+    node _T_19 = bits(io_channels_write_data_channel_WSTRB, 0, 0) @[4-soc/src/main/scala/bus/AXI4Lite.scala 207:70]
+    node _T_20 = bits(io_channels_write_data_channel_WSTRB, 1, 1) @[4-soc/src/main/scala/bus/AXI4Lite.scala 207:70]
+    node _T_21 = bits(io_channels_write_data_channel_WSTRB, 2, 2) @[4-soc/src/main/scala/bus/AXI4Lite.scala 207:70]
+    node _T_22 = bits(io_channels_write_data_channel_WSTRB, 3, 3) @[4-soc/src/main/scala/bus/AXI4Lite.scala 207:70]
+    node _GEN_19 = mux(_T_18, io_channels_write_data_channel_WDATA, write_data) @[4-soc/src/main/scala/bus/AXI4Lite.scala 204:61 206:22 137:27]
+    node _WIRE_0 = _T_19 @[4-soc/src/main/scala/bus/AXI4Lite.scala 207:{32,32}]
+    node _GEN_20 = mux(_T_18, _WIRE_0, write_strobe_0) @[4-soc/src/main/scala/bus/AXI4Lite.scala 204:61 207:22 139:29]
+    node _WIRE_1 = _T_20 @[4-soc/src/main/scala/bus/AXI4Lite.scala 207:{32,32}]
+    node _GEN_21 = mux(_T_18, _WIRE_1, write_strobe_1) @[4-soc/src/main/scala/bus/AXI4Lite.scala 204:61 207:22 139:29]
+    node _WIRE_2 = _T_21 @[4-soc/src/main/scala/bus/AXI4Lite.scala 207:{32,32}]
+    node _GEN_22 = mux(_T_18, _WIRE_2, write_strobe_2) @[4-soc/src/main/scala/bus/AXI4Lite.scala 204:61 207:22 139:29]
+    node _WIRE_3 = _T_22 @[4-soc/src/main/scala/bus/AXI4Lite.scala 207:{32,32}]
+    node _GEN_23 = mux(_T_18, _WIRE_3, write_strobe_3) @[4-soc/src/main/scala/bus/AXI4Lite.scala 204:61 207:22 139:29]
+    node _GEN_24 = mux(_T_18, UInt<1>("h0"), WREADY) @[4-soc/src/main/scala/bus/AXI4Lite.scala 204:61 208:22 144:23]
+    node _GEN_25 = mux(_T_18, UInt<1>("h1"), write) @[4-soc/src/main/scala/bus/AXI4Lite.scala 135:22 204:61 209:22]
+    node _GEN_26 = mux(_T_18, UInt<3>("h5"), state) @[4-soc/src/main/scala/bus/AXI4Lite.scala 116:22 204:61 210:22]
+    node _T_23 = asUInt(UInt<3>("h5")) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17]
+    node _T_24 = asUInt(state) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17]
+    node _T_25 = eq(_T_23, _T_24) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17]
+    node _T_26 = and(BVALID, io_channels_write_response_channel_BREADY) @[4-soc/src/main/scala/bus/AXI4Lite.scala 219:19]
+    node _GEN_27 = mux(_T_26, UInt<1>("h0"), UInt<1>("h1")) @[4-soc/src/main/scala/bus/AXI4Lite.scala 216:14 219:65 221:16]
+    node _GEN_28 = mux(_T_26, UInt<1>("h0"), state) @[4-soc/src/main/scala/bus/AXI4Lite.scala 219:65 222:16 116:22]
+    node _GEN_29 = mux(_T_25, UInt<1>("h0"), write) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 215:14 135:22]
+    node _GEN_30 = mux(_T_25, _GEN_27, BVALID) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 146:23]
+    node _GEN_31 = mux(_T_25, UInt<1>("h0"), UInt<2>("h0")) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 217:14 148:23]
+    node _GEN_32 = mux(_T_25, _GEN_28, state) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 116:22]
+    node _GEN_33 = mux(_T_17, _GEN_19, write_data) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 137:27]
+    node _GEN_34 = mux(_T_17, _GEN_20, write_strobe_0) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 139:29]
+    node _GEN_35 = mux(_T_17, _GEN_21, write_strobe_1) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 139:29]
+    node _GEN_36 = mux(_T_17, _GEN_22, write_strobe_2) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 139:29]
+    node _GEN_37 = mux(_T_17, _GEN_23, write_strobe_3) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 139:29]
+    node _GEN_38 = mux(_T_17, _GEN_24, WREADY) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 144:23]
+    node _GEN_39 = mux(_T_17, _GEN_25, _GEN_29) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17]
+    node _GEN_40 = mux(_T_17, _GEN_26, _GEN_32) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17]
+    node _GEN_41 = mux(_T_17, BVALID, _GEN_30) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 146:23]
+    node _GEN_42 = mux(_T_17, UInt<2>("h0"), _GEN_31) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 148:23]
+    node _GEN_43 = mux(_T_13, _GEN_15, addr) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 118:21]
+    node _GEN_44 = mux(_T_13, _GEN_16, AWREADY) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 142:24]
+    node _GEN_45 = mux(_T_13, _GEN_17, _GEN_38) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17]
+    node _GEN_46 = mux(_T_13, _GEN_18, _GEN_40) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17]
+    node _GEN_47 = mux(_T_13, write_data, _GEN_33) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 137:27]
+    node _GEN_48 = mux(_T_13, write_strobe_0, _GEN_34) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 139:29]
+    node _GEN_49 = mux(_T_13, write_strobe_1, _GEN_35) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 139:29]
+    node _GEN_50 = mux(_T_13, write_strobe_2, _GEN_36) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 139:29]
+    node _GEN_51 = mux(_T_13, write_strobe_3, _GEN_37) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 139:29]
+    node _GEN_52 = mux(_T_13, write, _GEN_39) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 135:22]
+    node _GEN_53 = mux(_T_13, BVALID, _GEN_41) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 146:23]
+    node _GEN_54 = mux(_T_13, UInt<2>("h0"), _GEN_42) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 148:23]
+    node _GEN_55 = mux(_T_9, _GEN_9, read_data) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 124:26]
+    node _GEN_56 = mux(_T_9, _GEN_13, RVALID) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 129:23]
+    node _GEN_57 = mux(_T_9, _GEN_11, RRESP) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 131:22]
+    node _GEN_58 = mux(_T_9, _GEN_12, read) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 122:21]
+    node _GEN_59 = mux(_T_9, _GEN_14, _GEN_46) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17]
+    node _GEN_60 = mux(_T_9, addr, _GEN_43) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 118:21]
+    node _GEN_61 = mux(_T_9, AWREADY, _GEN_44) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 142:24]
+    node _GEN_62 = mux(_T_9, WREADY, _GEN_45) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 144:23]
+    node _GEN_63 = mux(_T_9, write_data, _GEN_47) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 137:27]
+    node _GEN_64 = mux(_T_9, write_strobe_0, _GEN_48) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 139:29]
+    node _GEN_65 = mux(_T_9, write_strobe_1, _GEN_49) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 139:29]
+    node _GEN_66 = mux(_T_9, write_strobe_2, _GEN_50) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 139:29]
+    node _GEN_67 = mux(_T_9, write_strobe_3, _GEN_51) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 139:29]
+    node _GEN_68 = mux(_T_9, write, _GEN_52) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 135:22]
+    node _GEN_69 = mux(_T_9, BVALID, _GEN_53) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 146:23]
+    node _GEN_70 = mux(_T_9, UInt<2>("h0"), _GEN_54) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 148:23]
+    node _GEN_71 = mux(_T_5, _GEN_5, _GEN_60) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17]
+    node _GEN_72 = mux(_T_5, _GEN_6, ARREADY) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 127:24]
+    node _GEN_73 = mux(_T_5, _GEN_7, _GEN_58) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17]
+    node _GEN_74 = mux(_T_5, _GEN_8, _GEN_59) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17]
+    node _GEN_75 = mux(_T_5, read_data, _GEN_55) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 124:26]
+    node _GEN_76 = mux(_T_5, RVALID, _GEN_56) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 129:23]
+    node _GEN_77 = mux(_T_5, RRESP, _GEN_57) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 131:22]
+    node _GEN_78 = mux(_T_5, AWREADY, _GEN_61) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 142:24]
+    node _GEN_79 = mux(_T_5, WREADY, _GEN_62) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 144:23]
+    node _GEN_80 = mux(_T_5, write_data, _GEN_63) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 137:27]
+    node _GEN_81 = mux(_T_5, write_strobe_0, _GEN_64) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 139:29]
+    node _GEN_82 = mux(_T_5, write_strobe_1, _GEN_65) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 139:29]
+    node _GEN_83 = mux(_T_5, write_strobe_2, _GEN_66) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 139:29]
+    node _GEN_84 = mux(_T_5, write_strobe_3, _GEN_67) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 139:29]
+    node _GEN_85 = mux(_T_5, write, _GEN_68) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 135:22]
+    node _GEN_86 = mux(_T_5, BVALID, _GEN_69) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 146:23]
+    node _GEN_87 = mux(_T_5, UInt<2>("h0"), _GEN_70) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 148:23]
+    node _GEN_88 = mux(_T_2, UInt<1>("h0"), _GEN_73) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 153:13]
+    node _GEN_89 = mux(_T_2, UInt<1>("h0"), _GEN_85) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 154:13]
+    node _GEN_90 = mux(_T_2, _GEN_2, _GEN_74) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17]
+    node _GEN_91 = mux(_T_2, _GEN_3, _GEN_72) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17]
+    node _GEN_92 = mux(_T_2, _GEN_4, _GEN_78) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17]
+    node _GEN_93 = mux(_T_2, addr, _GEN_71) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 118:21]
+    node _GEN_94 = mux(_T_2, read_data, _GEN_75) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 124:26]
+    node _GEN_95 = mux(_T_2, RVALID, _GEN_76) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 129:23]
+    node _GEN_96 = mux(_T_2, RRESP, _GEN_77) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 131:22]
+    node _GEN_97 = mux(_T_2, WREADY, _GEN_79) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 144:23]
+    node _GEN_98 = mux(_T_2, write_data, _GEN_80) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 137:27]
+    node _GEN_99 = mux(_T_2, write_strobe_0, _GEN_81) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 139:29]
+    node _GEN_100 = mux(_T_2, write_strobe_1, _GEN_82) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 139:29]
+    node _GEN_101 = mux(_T_2, write_strobe_2, _GEN_83) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 139:29]
+    node _GEN_102 = mux(_T_2, write_strobe_3, _GEN_84) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 139:29]
+    node _GEN_103 = mux(_T_2, BVALID, _GEN_86) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 146:23]
+    node _GEN_104 = mux(_T_2, UInt<2>("h0"), _GEN_87) @[4-soc/src/main/scala/bus/AXI4Lite.scala 151:17 148:23]
+    node _write_strobe_WIRE_0 = UInt<1>("h0") @[4-soc/src/main/scala/bus/AXI4Lite.scala 139:{37,37}]
+    node _write_strobe_WIRE_1 = UInt<1>("h0") @[4-soc/src/main/scala/bus/AXI4Lite.scala 139:{37,37}]
+    node _write_strobe_WIRE_2 = UInt<1>("h0") @[4-soc/src/main/scala/bus/AXI4Lite.scala 139:{37,37}]
+    node _write_strobe_WIRE_3 = UInt<1>("h0") @[4-soc/src/main/scala/bus/AXI4Lite.scala 139:{37,37}]
+    node BRESP = _GEN_104 @[4-soc/src/main/scala/bus/AXI4Lite.scala 148:23]
+    io_channels_write_address_channel_AWREADY <= AWREADY @[4-soc/src/main/scala/bus/AXI4Lite.scala 143:45]
+    io_channels_write_data_channel_WREADY <= WREADY @[4-soc/src/main/scala/bus/AXI4Lite.scala 145:41]
+    io_channels_write_response_channel_BVALID <= BVALID @[4-soc/src/main/scala/bus/AXI4Lite.scala 147:45]
+    io_channels_write_response_channel_BRESP <= BRESP @[4-soc/src/main/scala/bus/AXI4Lite.scala 149:44]
+    io_channels_read_address_channel_ARREADY <= ARREADY @[4-soc/src/main/scala/bus/AXI4Lite.scala 128:44]
+    io_channels_read_data_channel_RVALID <= RVALID @[4-soc/src/main/scala/bus/AXI4Lite.scala 130:40]
+    io_channels_read_data_channel_RDATA <= read_data @[4-soc/src/main/scala/bus/AXI4Lite.scala 125:39]
+    io_channels_read_data_channel_RRESP <= RRESP @[4-soc/src/main/scala/bus/AXI4Lite.scala 132:39]
+    io_bundle_address <= addr @[4-soc/src/main/scala/bus/AXI4Lite.scala 119:21]
+    io_bundle_read <= read @[4-soc/src/main/scala/bus/AXI4Lite.scala 123:18]
+    io_bundle_write <= write @[4-soc/src/main/scala/bus/AXI4Lite.scala 136:19]
+    io_bundle_write_data <= write_data @[4-soc/src/main/scala/bus/AXI4Lite.scala 138:24]
+    io_bundle_write_strobe_0 <= write_strobe_0 @[4-soc/src/main/scala/bus/AXI4Lite.scala 140:26]
+    io_bundle_write_strobe_1 <= write_strobe_1 @[4-soc/src/main/scala/bus/AXI4Lite.scala 140:26]
+    io_bundle_write_strobe_2 <= write_strobe_2 @[4-soc/src/main/scala/bus/AXI4Lite.scala 140:26]
+    io_bundle_write_strobe_3 <= write_strobe_3 @[4-soc/src/main/scala/bus/AXI4Lite.scala 140:26]
+    state <= mux(reset, UInt<1>("h0"), _GEN_90) @[4-soc/src/main/scala/bus/AXI4Lite.scala 116:{22,22}]
+    addr <= mux(reset, UInt<32>("h0"), _GEN_93) @[4-soc/src/main/scala/bus/AXI4Lite.scala 118:{21,21}]
+    read <= mux(reset, UInt<1>("h0"), _GEN_88) @[4-soc/src/main/scala/bus/AXI4Lite.scala 122:{21,21}]
+    read_data <= mux(reset, UInt<32>("h0"), _GEN_94) @[4-soc/src/main/scala/bus/AXI4Lite.scala 124:{26,26}]
+    ARREADY <= mux(reset, UInt<1>("h0"), _GEN_91) @[4-soc/src/main/scala/bus/AXI4Lite.scala 127:{24,24}]
+    RVALID <= mux(reset, UInt<1>("h0"), _GEN_95) @[4-soc/src/main/scala/bus/AXI4Lite.scala 129:{23,23}]
+    RRESP <= mux(reset, UInt<2>("h0"), _GEN_96) @[4-soc/src/main/scala/bus/AXI4Lite.scala 131:{22,22}]
+    write <= mux(reset, UInt<1>("h0"), _GEN_89) @[4-soc/src/main/scala/bus/AXI4Lite.scala 135:{22,22}]
+    write_data <= mux(reset, UInt<32>("h0"), _GEN_98) @[4-soc/src/main/scala/bus/AXI4Lite.scala 137:{27,27}]
+    write_strobe_0 <= mux(reset, _write_strobe_WIRE_0, _GEN_99) @[4-soc/src/main/scala/bus/AXI4Lite.scala 139:{29,29}]
+    write_strobe_1 <= mux(reset, _write_strobe_WIRE_1, _GEN_100) @[4-soc/src/main/scala/bus/AXI4Lite.scala 139:{29,29}]
+    write_strobe_2 <= mux(reset, _write_strobe_WIRE_2, _GEN_101) @[4-soc/src/main/scala/bus/AXI4Lite.scala 139:{29,29}]
+    write_strobe_3 <= mux(reset, _write_strobe_WIRE_3, _GEN_102) @[4-soc/src/main/scala/bus/AXI4Lite.scala 139:{29,29}]
+    AWREADY <= mux(reset, UInt<1>("h0"), _GEN_92) @[4-soc/src/main/scala/bus/AXI4Lite.scala 142:{24,24}]
+    WREADY <= mux(reset, UInt<1>("h0"), _GEN_97) @[4-soc/src/main/scala/bus/AXI4Lite.scala 144:{23,23}]
+    BVALID <= mux(reset, UInt<1>("h0"), _GEN_103) @[4-soc/src/main/scala/bus/AXI4Lite.scala 146:{23,23}]
+
+  module AXI4WritePathTest_Anon :
+    input clock : Clock
+    input reset : UInt<1>
+    output io_write_done : UInt<1> @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 16:18]
+    output io_read_data : UInt<32> @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 16:18]
+    output io_debug_write : UInt<1> @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 16:18]
+    output io_debug_addr : UInt<32> @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 16:18]
+
+    inst mem of Memory @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 24:23]
+    inst master of AXI4LiteMaster @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 39:28]
+    inst slave of AXI4LiteSlave @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 40:28]
+    reg CPU_clkdiv : UInt<2>, clock with :
+      reset => (UInt<1>("h0"), CPU_clkdiv) @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 29:31]
+    node CPU_tick = eq(CPU_clkdiv, UInt<1>("h0")) @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 30:35]
+    node _CPU_clkdiv_T = eq(CPU_clkdiv, UInt<2>("h3")) @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 31:36]
+    node _CPU_clkdiv_T_1 = add(CPU_clkdiv, UInt<1>("h1")) @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 31:61]
+    node _CPU_clkdiv_T_2 = tail(_CPU_clkdiv_T_1, 1) @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 31:61]
+    node _CPU_clkdiv_T_3 = mux(_CPU_clkdiv_T, UInt<1>("h0"), _CPU_clkdiv_T_2) @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 31:24]
+    reg write_complete : UInt<1>, clock with :
+      reset => (UInt<1>("h0"), write_complete) @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 34:35]
+    node _T = asClock(CPU_tick) @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 38:26]
+    reg started : UInt<1>, _T with :
+      reset => (UInt<1>("h0"), started) @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 45:30]
+    node _master_io_bundle_write_T = eq(started, UInt<1>("h0")) @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 47:42]
+    node _master_io_bundle_write_T_1 = eq(write_complete, UInt<1>("h0")) @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 47:54]
+    node _master_io_bundle_write_T_2 = and(_master_io_bundle_write_T, _master_io_bundle_write_T_1) @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 47:51]
+    node _GEN_0 = mux(master.io_bundle_write_valid, UInt<1>("h1"), write_complete) @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 52:44 53:26 34:35]
+    node _T_1 = eq(started, UInt<1>("h0")) @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 55:14]
+    node _T_2 = eq(master.io_bundle_busy, UInt<1>("h0")) @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 55:26]
+    node _T_3 = and(_T_1, _T_2) @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 55:23]
+    node _GEN_1 = mux(_T_3, UInt<1>("h1"), started) @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 55:50 56:19 45:30]
+    node _WIRE_0 = UInt<1>("h1") @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 50:{49,49}]
+    node _WIRE_1 = UInt<1>("h1") @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 50:{49,49}]
+    node _WIRE_2 = UInt<1>("h1") @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 50:{49,49}]
+    node _WIRE_3 = UInt<1>("h1") @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 50:{49,49}]
+    io_write_done <= write_complete @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 35:21]
+    io_read_data <= mem.io_debug_read_data @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 36:21]
+    io_debug_write <= slave.io_bundle_write @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 66:24]
+    io_debug_addr <= slave.io_bundle_address @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 67:24]
+    mem.clock <= clock
+    mem.reset <= reset
+    mem.io_bundle_address <= slave.io_bundle_address @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 60:36]
+    mem.io_bundle_write_data <= slave.io_bundle_write_data @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 61:36]
+    mem.io_bundle_write_enable <= slave.io_bundle_write @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 62:36]
+    mem.io_bundle_write_strobe_0 <= slave.io_bundle_write_strobe_0 @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 63:36]
+    mem.io_bundle_write_strobe_1 <= slave.io_bundle_write_strobe_1 @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 63:36]
+    mem.io_bundle_write_strobe_2 <= slave.io_bundle_write_strobe_2 @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 63:36]
+    mem.io_bundle_write_strobe_3 <= slave.io_bundle_write_strobe_3 @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 63:36]
+    mem.io_instruction_address <= UInt<32>("h0") @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 25:34]
+    mem.io_debug_read_address <= UInt<32>("h100") @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 26:34]
+    CPU_clkdiv <= mux(reset, UInt<2>("h0"), _CPU_clkdiv_T_3) @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 29:{31,31} 31:18]
+    write_complete <= mux(reset, UInt<1>("h0"), _GEN_0) @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 34:{35,35}]
+    master.clock <= _T
+    master.reset <= reset
+    master.io_channels_write_address_channel_AWREADY <= slave.io_channels_write_address_channel_AWREADY @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 42:28]
+    master.io_channels_write_data_channel_WREADY <= slave.io_channels_write_data_channel_WREADY @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 42:28]
+    master.io_channels_write_response_channel_BVALID <= slave.io_channels_write_response_channel_BVALID @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 42:28]
+    master.io_channels_write_response_channel_BRESP <= slave.io_channels_write_response_channel_BRESP @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 42:28]
+    master.io_channels_read_address_channel_ARREADY <= slave.io_channels_read_address_channel_ARREADY @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 42:28]
+    master.io_channels_read_data_channel_RVALID <= slave.io_channels_read_data_channel_RVALID @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 42:28]
+    master.io_channels_read_data_channel_RDATA <= slave.io_channels_read_data_channel_RDATA @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 42:28]
+    master.io_channels_read_data_channel_RRESP <= slave.io_channels_read_data_channel_RRESP @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 42:28]
+    master.io_bundle_address <= UInt<32>("h100") @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 46:39]
+    master.io_bundle_read <= UInt<1>("h0") @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 48:39]
+    master.io_bundle_write <= _master_io_bundle_write_T_2 @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 47:39]
+    master.io_bundle_write_data <= UInt<32>("hdeadbeef") @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 49:39]
+    master.io_bundle_write_strobe_0 <= _WIRE_0 @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 50:39]
+    master.io_bundle_write_strobe_1 <= _WIRE_1 @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 50:39]
+    master.io_bundle_write_strobe_2 <= _WIRE_2 @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 50:39]
+    master.io_bundle_write_strobe_3 <= _WIRE_3 @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 50:39]
+    slave.clock <= _T
+    slave.reset <= reset
+    slave.io_channels_write_address_channel_AWVALID <= master.io_channels_write_address_channel_AWVALID @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 42:28]
+    slave.io_channels_write_address_channel_AWADDR <= master.io_channels_write_address_channel_AWADDR @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 42:28]
+    slave.io_channels_write_address_channel_AWPROT <= master.io_channels_write_address_channel_AWPROT @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 42:28]
+    slave.io_channels_write_data_channel_WVALID <= master.io_channels_write_data_channel_WVALID @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 42:28]
+    slave.io_channels_write_data_channel_WDATA <= master.io_channels_write_data_channel_WDATA @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 42:28]
+    slave.io_channels_write_data_channel_WSTRB <= master.io_channels_write_data_channel_WSTRB @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 42:28]
+    slave.io_channels_write_response_channel_BREADY <= master.io_channels_write_response_channel_BREADY @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 42:28]
+    slave.io_channels_read_address_channel_ARVALID <= master.io_channels_read_address_channel_ARVALID @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 42:28]
+    slave.io_channels_read_address_channel_ARADDR <= master.io_channels_read_address_channel_ARADDR @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 42:28]
+    slave.io_channels_read_address_channel_ARPROT <= master.io_channels_read_address_channel_ARPROT @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 42:28]
+    slave.io_channels_read_data_channel_RREADY <= master.io_channels_read_data_channel_RREADY @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 42:28]
+    slave.io_bundle_read_data <= mem.io_bundle_read_data @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 70:36]
+    slave.io_bundle_read_valid <= UInt<1>("h0") @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 71:36]
+    started <= mux(reset, UInt<1>("h0"), _GEN_1) @[4-soc/src/test/scala/riscv/AXI4WritePathTest.scala 45:{30,30}]
