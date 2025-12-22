@@ -1,6 +1,6 @@
 /*
  * main.c - VGA PRIORITY TEST
- * Mục tiêu: Bỏ qua kiểm tra UART để ép VGA chạy
+ * Objective: Skip UART checks to force VGA to run
  */
 
 #include <stdint.h>
@@ -12,11 +12,11 @@
 #define VGA_CTRL        ( *(volatile uint32_t *)(VGA_BASE + 0x04) )
 #define VGA_PALETTE(i)  ( *(volatile uint32_t *)(VGA_BASE + 0x20 + ((i)<<2)) )
 
-/* Driver UART "Mù" (Blind Driver) - Không thèm kiểm tra trạng thái */
-/* Giúp tránh bị treo nếu phần cứng chưa sẵn sàng */
+/* "Blind" UART Driver - Does not check status */
+/* Helps avoid hanging if hardware is not ready */
 void uart_putc(char c) {
     UART_TX_DATA = c; 
-    // Thêm delay nhỏ để máy tính kịp xử lý
+    // Add a small delay to let the computer process
     for(int i=0; i<1000; i++) __asm__("nop");
 }
 
@@ -30,26 +30,26 @@ void busy_wait(int count) {
 }
 
 int main(void) {
-    /* 1. TEST VGA NGAY LẬP TỨC (Dòng lệnh đầu tiên) */
-    VGA_CTRL = 1; // Bật màn hình
+    /* 1. TEST VGA IMMEDIATELY (First instruction) */
+    VGA_CTRL = 1; // Turn on screen
     
-    // Ghi thử màu ĐỎ vào Palette 0 (Nền)
+    // Write RED color to Palette 0 (Background)
     VGA_PALETTE(0) = 0xE0; 
 
-    /* 2. Gửi UART (Nếu thấy chữ -> UART sống. Nếu không -> Kệ nó) */
+    /* 2. Send via UART (If text appears -> UART works. If not -> ignore) */
     uart_puts("VGA Red Test\r\n");
 
-    /* 3. Vòng lặp đổi màu liên tục */
+    /* 3. Loop to change colors continuously */
     while (1) {
-        // XANH LÁ
+        // GREEN
         VGA_PALETTE(0) = 0x1C; 
         busy_wait(500000); // Delay ~0.5s
 
-        // TRẮNG
+        // WHITE
         VGA_PALETTE(0) = 0xFF; 
         busy_wait(500000);
         
-        // ĐỎ
+        // RED
         VGA_PALETTE(0) = 0xE0;
         busy_wait(500000);
     }

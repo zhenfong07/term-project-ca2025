@@ -8,7 +8,7 @@
 #include "portmacro.h"
 #include "string.h"
 
-/* --- THƯ VIỆN CHUỖI TỰ VIẾT --- */
+/* --- CUSTOM STRING LIBRARY --- */
 void *memset(void *dest, int c, size_t n) {
     unsigned char *p = (unsigned char *)dest;
     while (n--) *p++ = (unsigned char)c;
@@ -37,7 +37,7 @@ size_t strlen(const char *s) {
     return len;
 }
 
-/* --- PHẦN CỨNG --- */
+/* --- HARDWARE DEFINITIONS --- */
 #define CLINT_MTIMECMP_LOW  ( *(volatile uint32_t * )( configMTIMECMP_BASE_ADDRESS + 0x0 ) )
 #define CLINT_MTIMECMP_HIGH ( *(volatile uint32_t * )( configMTIMECMP_BASE_ADDRESS + 0x4 ) )
 #define CLINT_MTIME_LOW     ( *(volatile uint32_t * )( configMTIME_BASE_ADDRESS + 0x8 ) )
@@ -64,6 +64,7 @@ void vPortSetupTimerInterrupt( void )
     uint32_t ulNextTimeLow, ulNextTimeHigh;
     uint32_t ulTickIncrement = configCPU_CLOCK_HZ / configTICK_RATE_HZ;
 
+    // Read current time atomically
     do {
         ulCurrentTimeHigh = CLINT_MTIME_HIGH;
         ulCurrentTimeLow = CLINT_MTIME_LOW;
@@ -75,14 +76,16 @@ void vPortSetupTimerInterrupt( void )
     ulNextTimeLow = ( uint32_t ) ( ullNextTime & 0xFFFFFFFFUL );
     ulNextTimeHigh = ( uint32_t ) ( ullNextTime >> 32 );
 
-    CLINT_MTIMECMP_LOW = 0xFFFFFFFF;
+    // Set timer compare to schedule next tick
+    CLINT_MTIMECMP_LOW = 0xFFFFFFFF; // Avoid spurious interrupts
     CLINT_MTIMECMP_HIGH = ulNextTimeHigh;
     CLINT_MTIMECMP_LOW = ulNextTimeLow;
 }
 
-/* --- INIT STACK --- */
+/* --- INITIALIZE TASK STACK --- */
 StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters )
 {
+    // Fill general-purpose registers with dummy values (x31..x1)
     pxTopOfStack--; *pxTopOfStack = (StackType_t)0xdeadbeef; /* x31 */
     pxTopOfStack--; *pxTopOfStack = (StackType_t)0xdeadbeef; /* x30 */
     pxTopOfStack--; *pxTopOfStack = (StackType_t)0xdeadbeef; /* x29 */
@@ -119,11 +122,11 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
     return pxTopOfStack;
 }
 
-/* --- START SCHEDULER (QUAN TRỌNG NHẤT) --- */
+/* --- START SCHEDULER (MOST IMPORTANT PART) --- */
 BaseType_t xPortStartScheduler( void )
 {
     extern void xPortStartFirstTask( void );
-    extern void freertos_risc_v_trap_handler( void ); // Hàm xử lý ngắt trong Assembly
+    extern void freertos_risc_v_trap_handler( void ); // Assembly interrupt handler
 
     #if ( configASSERT_DEFINED == 1 )
     {
@@ -131,17 +134,17 @@ BaseType_t xPortStartScheduler( void )
     }
     #endif
 
-    /* 1. Cài đặt mtvec trỏ về Trap Handler của FreeRTOS */
-    /* Nếu không có dòng này, CPU sẽ nhảy lung tung khi có ngắt! */
+    /* 1. Set mtvec to FreeRTOS Trap Handler */
+    /* Without this, CPU will jump randomly on interrupts! */
     __asm__ volatile( "csrw mtvec, %0" :: "r"( freertos_risc_v_trap_handler ) );
 
-    /* 2. Khởi tạo Timer */
+    /* 2. Initialize Timer */
     vPortSetupTimerInterrupt();
 
-    /* 3. Bật ngắt Timer (bit 7) và External (bit 11) */
+    /* 3. Enable Timer (bit 7) and External (bit 11) interrupts */
     __asm volatile ( "csrs mie, %0" ::"r" ( 0x880 ) );
 
-    /* 4. Nhảy vào Task đầu tiên */
+    /* 4. Jump to the first task */
     xPortStartFirstTask();
 
     return 0;
