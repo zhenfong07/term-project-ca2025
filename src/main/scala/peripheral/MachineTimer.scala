@@ -32,6 +32,9 @@ class MachineTimer(addrWidth: Int = 32, dataWidth: Int = Parameters.DataBits) ex
   val mtime    = RegInit(0.U(64.W))
   val mtimecmp = RegInit(0xFFFFFFFFFFFFFFFFL.U(64.W))
 
+  //Counter increment every cycle
+  mtime := mtime + 1.U
+
   //interruption
   io.mtip := mtime >= mtimecmp
 
