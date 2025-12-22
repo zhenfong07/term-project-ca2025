@@ -11,6 +11,7 @@ import bus.BusSwitch
 import chisel3._
 import chisel3.stage.ChiselStage
 import peripheral.DummySlave
+import peripheral.MachineTimer
 import peripheral.Uart
 import peripheral.VGA
 import riscv.core.CPU
@@ -41,6 +42,9 @@ class Top extends Module {
     val uart_rxd       = Input(UInt(1.W))  // UART RX data
     val uart_interrupt = Output(Bool())    // UART interrupt signal
 
+    // Timer interrupt
+    val timer_interrupt = Output(Bool())
+
     val cpu_debug_read_address     = Input(UInt(Parameters.PhysicalRegisterAddrWidth))
     val cpu_debug_read_data        = Output(UInt(Parameters.DataWidth))
     val cpu_csr_debug_read_address = Input(UInt(Parameters.CSRRegisterAddrWidth))
@@ -56,6 +60,9 @@ class Top extends Module {
 
   // UART peripheral (115200 baud at 50MHz system clock)
   val uart = Module(new Uart(frequency = 50000000, baudRate = 115200))
+
+  // MachineTimer for FreeRTOS
+  val timer = Module(new MachineTimer)
 
   val cpu         = Module(new CPU)
   val dummy       = Module(new DummySlave)
@@ -87,7 +94,8 @@ class Top extends Module {
   bus_switch.io.slaves(0) <> mem_slave.io.channels
   bus_switch.io.slaves(1) <> vga.io.channels
   bus_switch.io.slaves(2) <> uart.io.channels
-  for (i <- 3 until Parameters.SlaveDeviceCount) {
+  bus_switch.io.slaves(3) <> timer.io.channels
+  for (i <- 4 until Parameters.SlaveDeviceCount) {
     bus_switch.io.slaves(i) <> dummy.io.channels
   }
 
@@ -105,8 +113,11 @@ class Top extends Module {
   uart.io.rxd       := io.uart_rxd
   io.uart_interrupt := uart.io.signal_interrupt
 
-  // Interrupt
-  cpu.io.interrupt_flag := io.signal_interrupt
+  // Timer connection
+  io.timer_interrupt := timer.io.mtip
+
+  // Interrupt (timer + external)
+  cpu.io.interrupt_flag := timer.io.mtip | io.signal_interrupt
 
   // Debug interfaces
   cpu.io.debug_read_address     := io.cpu_debug_read_address
