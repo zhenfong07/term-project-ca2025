@@ -116,8 +116,8 @@ class Top extends Module {
   // Timer connection
   io.timer_interrupt := timer.io.mtip
 
-  // Interrupt (timer + external)
-  cpu.io.interrupt_flag := timer.io.mtip | io.signal_interrupt
+  // Interrupt vector: bit 0 = timer, bit 1 = external
+  cpu.io.interrupt_flag := Cat(0.U(30.W), io.signal_interrupt, timer.io.mtip)
 
   // Debug interfaces
   cpu.io.debug_read_address     := io.cpu_debug_read_address
