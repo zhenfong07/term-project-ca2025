@@ -45,6 +45,10 @@ class Top extends Module {
     // Timer interrupt
     val timer_interrupt = Output(Bool())
 
+    // Timer debug outputs
+    val timer_debug_mtime    = Output(UInt(64.W))
+    val timer_debug_mtimecmp = Output(UInt(64.W))
+
     val cpu_debug_read_address     = Input(UInt(Parameters.PhysicalRegisterAddrWidth))
     val cpu_debug_read_data        = Output(UInt(Parameters.DataWidth))
     val cpu_csr_debug_read_address = Input(UInt(Parameters.CSRRegisterAddrWidth))
@@ -115,6 +119,10 @@ class Top extends Module {
 
   // Timer connection
   io.timer_interrupt := timer.io.mtip
+
+  // Timer debug outputs
+  io.timer_debug_mtime    := timer.io.debug_mtime
+  io.timer_debug_mtimecmp := timer.io.debug_mtimecmp
 
   // Interrupt vector: bit 0 = timer, bit 1 = external
   cpu.io.interrupt_flag := Cat(0.U(30.W), io.signal_interrupt, timer.io.mtip)
