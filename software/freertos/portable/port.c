@@ -1,7 +1,4 @@
-/*
- * FreeRTOS Kernel V10.4.6 - Modified for 4-soc
- * VERSION 2: FIXED MISSING MTVEC SETUP
- */
+
 
 #include "FreeRTOS.h"
 #include "task.h"
@@ -148,6 +145,15 @@ BaseType_t xPortStartScheduler( void )
     xPortStartFirstTask();
 
     return 0;
+}
+long __mulsi3(long a, long b) {
+    long r = 0;
+    while (b) {
+        if (b & 1) r += a;
+        a <<= 1;
+        b >>= 1;
+    }
+    return r;
 }
 
 void vPortEndScheduler( void ) { for( ; ; ); }
