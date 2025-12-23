@@ -7,15 +7,14 @@
     .global _exit
 
 _start:
+    la sp, _stack_top
+    
+    andi sp, sp, -16 /* alignment 16 byte to avoid error when calling FreeRTOS */
     /* 1. Disable global interrupts (safe during startup) */
     csrw mie, zero
     csrw mip, zero
 
-    /* 2. Set up the Stack Pointer (SP) */
-    /* RAM starts at 0x00000000, size is 32KB -> Stack top is 0x00008000 */
-    /* The linker script provides the _stack_top symbol */
-    la sp, _stack_top
-
+    
     /* 3. Clear the BSS section (uninitialized global/static variables = 0) */
     /* If not cleared, C global/static variables will contain garbage values */
     la t0, _sbss
