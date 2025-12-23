@@ -3,7 +3,6 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "portmacro.h"
-#include "string.h"
 
 /* --- CUSTOM STRING LIBRARY --- */
 void *memset(void *dest, int c, size_t n) {
@@ -51,7 +50,7 @@ size_t strlen(const char *s) {
     const StackType_t xISRStackTop = ( StackType_t ) __freertos_irq_stack_top;
 #endif
 
-size_t xCriticalNesting = 0xaaaaaaaa;
+size_t xCriticalNesting = 0;
 size_t * pxCriticalNesting = &xCriticalNesting;
 
 /* --- SETUP TIMER --- */
@@ -82,6 +81,11 @@ void vPortSetupTimerInterrupt( void )
 /* --- INITIALIZE TASK STACK --- */
 StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters )
 {
+    /*For 16 byte stack*/
+    pxTopOfStack = ( StackType_t * ) ( ( ( uintptr_t ) pxTopOfStack ) & ~((uintptr_t)0xF) );
+
+    pxTopOfStack--; *pxTopOfStack = (StackType_t)portINITIAL_MSTATUS; /* mstatus */
+    pxTopOfStack--; *pxTopOfStack = (StackType_t)pxCode;     /* mepc */
     // Fill general-purpose registers with dummy values (x31..x1)
     pxTopOfStack--; *pxTopOfStack = (StackType_t)0xdeadbeef; /* x31 */
     pxTopOfStack--; *pxTopOfStack = (StackType_t)0xdeadbeef; /* x30 */
@@ -113,8 +117,6 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
     pxTopOfStack--; *pxTopOfStack = (StackType_t)0xdeadbeef; /* x4 */
     pxTopOfStack--; *pxTopOfStack = (StackType_t)0xdeadbeef; /* x3 */
     pxTopOfStack--; *pxTopOfStack = (StackType_t)pxCode;     /* x1 (ra) */
-    pxTopOfStack--; *pxTopOfStack = (StackType_t)portINITIAL_MSTATUS; /* mstatus */
-    pxTopOfStack--; *pxTopOfStack = (StackType_t)pxCode;     /* mepc */
 
     return pxTopOfStack;
 }
@@ -146,17 +148,14 @@ BaseType_t xPortStartScheduler( void )
 
     return 0;
 }
-long __mulsi3(long a, long b) {
-    long r = 0;
-    while (b) {
-        if (b & 1) r += a;
-        a <<= 1;
-        b >>= 1;
-    }
-    return r;
-}
 
 void vPortEndScheduler( void ) { for( ; ; ); }
 void vPortExternalInterruptHandler( void ) {}
 void vTaskEnterCritical( void ) { portDISABLE_INTERRUPTS(); xCriticalNesting++; }
-void vTaskExitCritical( void ) { xCriticalNesting--; if( xCriticalNesting == 0 ) portENABLE_INTERRUPTS(); }
+void vTaskExitCritical( void ){
+    if (xCriticalNesting > 0){
+        xCriticalNesting--;
+        if( xCriticalNesting == 0 ) portENABLE_INTERRUPTS();
+    }
+}
+
