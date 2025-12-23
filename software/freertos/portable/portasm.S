@@ -24,10 +24,10 @@ xPortStartFirstTask:
  * 
  */
 freertos_risc_v_trap_handler:
-    /* 1. LƯU CONTEXT (Save Context) */
+    /*  (Save Context) */
     addi sp, sp, -128
     
-    /* Lưu các thanh ghi GPR (trừ x0) */
+   
     sw x1,  4(sp)
     sw x5,  8(sp)
     sw x6,  12(sp)
@@ -124,7 +124,7 @@ portRESTORE_CONTEXT:
     lw t0, 0(sp)
     csrw mepc, t0
 
-    /* Khôi phục GPR */
+   
     lw x1,  4(sp)
     lw x5,  8(sp)
     lw x6,  12(sp)
