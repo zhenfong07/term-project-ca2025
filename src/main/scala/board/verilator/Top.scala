@@ -16,6 +16,7 @@ import peripheral.Uart
 import peripheral.VGA
 import riscv.core.CPU
 import riscv.Parameters
+import chisel3.util._ 
 
 class Top extends Module {
   val io = IO(new Bundle {
