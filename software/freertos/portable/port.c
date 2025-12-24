@@ -83,40 +83,23 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 {
     /*For 16 byte stack*/
     pxTopOfStack = ( StackType_t * ) ( ( ( uintptr_t ) pxTopOfStack ) & ~((uintptr_t)0xF) );
+    pxTopOfStack-=32;
+    for (int i=0;i<32;i++){
+        pxTopOfStack[i] = ( StackType_t ) 0xdeadbeef;
+    }
 
-    pxTopOfStack--; *pxTopOfStack = (StackType_t)portINITIAL_MSTATUS; /* mstatus */
-    pxTopOfStack--; *pxTopOfStack = (StackType_t)pxCode;     /* mepc */
-    // Fill general-purpose registers with dummy values (x31..x1)
-    pxTopOfStack--; *pxTopOfStack = (StackType_t)0xdeadbeef; /* x31 */
-    pxTopOfStack--; *pxTopOfStack = (StackType_t)0xdeadbeef; /* x30 */
-    pxTopOfStack--; *pxTopOfStack = (StackType_t)0xdeadbeef; /* x29 */
-    pxTopOfStack--; *pxTopOfStack = (StackType_t)0xdeadbeef; /* x28 */
-    pxTopOfStack--; *pxTopOfStack = (StackType_t)0xdeadbeef; /* x27 */
-    pxTopOfStack--; *pxTopOfStack = (StackType_t)0xdeadbeef; /* x26 */
-    pxTopOfStack--; *pxTopOfStack = (StackType_t)0xdeadbeef; /* x25 */
-    pxTopOfStack--; *pxTopOfStack = (StackType_t)0xdeadbeef; /* x24 */
-    pxTopOfStack--; *pxTopOfStack = (StackType_t)0xdeadbeef; /* x23 */
-    pxTopOfStack--; *pxTopOfStack = (StackType_t)0xdeadbeef; /* x22 */
-    pxTopOfStack--; *pxTopOfStack = (StackType_t)0xdeadbeef; /* x21 */
-    pxTopOfStack--; *pxTopOfStack = (StackType_t)0xdeadbeef; /* x20 */
-    pxTopOfStack--; *pxTopOfStack = (StackType_t)0xdeadbeef; /* x19 */
-    pxTopOfStack--; *pxTopOfStack = (StackType_t)0xdeadbeef; /* x18 */
-    pxTopOfStack--; *pxTopOfStack = (StackType_t)0xdeadbeef; /* x17 */
-    pxTopOfStack--; *pxTopOfStack = (StackType_t)0xdeadbeef; /* x16 */
-    pxTopOfStack--; *pxTopOfStack = (StackType_t)0xdeadbeef; /* x15 */
-    pxTopOfStack--; *pxTopOfStack = (StackType_t)0xdeadbeef; /* x14 */
-    pxTopOfStack--; *pxTopOfStack = (StackType_t)0xdeadbeef; /* x13 */
-    pxTopOfStack--; *pxTopOfStack = (StackType_t)0xdeadbeef; /* x12 */
-    pxTopOfStack--; *pxTopOfStack = (StackType_t)0xdeadbeef; /* x11 */
-    pxTopOfStack--; *pxTopOfStack = (StackType_t)pvParameters; /* x10 (a0) */
-    pxTopOfStack--; *pxTopOfStack = (StackType_t)0xdeadbeef; /* x9 */
-    pxTopOfStack--; *pxTopOfStack = (StackType_t)0xdeadbeef; /* x8 */
-    pxTopOfStack--; *pxTopOfStack = (StackType_t)0xdeadbeef; /* x7 */
-    pxTopOfStack--; *pxTopOfStack = (StackType_t)0xdeadbeef; /* x6 */
-    pxTopOfStack--; *pxTopOfStack = (StackType_t)0xdeadbeef; /* x5 */
-    pxTopOfStack--; *pxTopOfStack = (StackType_t)0xdeadbeef; /* x4 */
-    pxTopOfStack--; *pxTopOfStack = (StackType_t)0xdeadbeef; /* x3 */
-    pxTopOfStack--; *pxTopOfStack = (StackType_t)pxCode;     /* x1 (ra) */
+     pxTopOfStack[0] = ( StackType_t ) pxCode;
+
+     pxTopOfStack[1] = ( StackType_t ) 0;
+
+     pxTopOfStack[7] = ( StackType_t ) pvParameters;
+
+     pxTopOfStack[30] = ( StackType_t ) portINITIAL_MSTATUS;
+
+     pxTopOfStack[31] = ( StackType_t ) 0x00000000;
+
+
+    
 
     return pxTopOfStack;
 }
