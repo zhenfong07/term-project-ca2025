@@ -12,7 +12,7 @@ PORT_DIR = $(FREERTOS_DIR)/portable
 # -march=rv32i_zicsr -mabi=ilp32 : Base 32-bit RISC-V architecture with CSR support
 # -mcmodel=medany              : Allow access to arbitrary memory addresses (important for 32-bit RAM)
 # -ffreestanding               : Bare-metal environment (no host OS)
-CFLAGS = -march=rv32i_zicsr -mabi=ilp32 -mcmodel=medany \
+CFLAGS = -march=rv32im_zicsr -mabi=ilp32 -mcmodel=medany \
          -O2 -g -Wall \
          -I. \
          -I$(FREERTOS_DIR)/include \
