@@ -11,6 +11,7 @@ import bus.BusSwitch
 import chisel3._
 import chisel3.stage.ChiselStage
 import peripheral.DummySlave
+import peripheral.MachineTimer
 import peripheral.Uart
 import peripheral.VGA
 import riscv.core.CPU
@@ -41,6 +42,11 @@ class Top extends Module {
     val uart_rxd       = Input(UInt(1.W))  // UART RX data
     val uart_interrupt = Output(Bool())    // UART interrupt signal
 
+    // Machine Timer debug outputs
+    val timer_mtip        = Output(Bool())     // Machine Timer Interrupt Pending
+    val timer_mtime       = Output(UInt(64.W)) // Current mtime value
+    val timer_mtimecmp    = Output(UInt(64.W)) // Current mtimecmp value
+
     val cpu_debug_read_address     = Input(UInt(Parameters.PhysicalRegisterAddrWidth))
     val cpu_debug_read_data        = Output(UInt(Parameters.DataWidth))
     val cpu_csr_debug_read_address = Input(UInt(Parameters.CSRRegisterAddrWidth))
@@ -56,6 +62,9 @@ class Top extends Module {
 
   // UART peripheral (115200 baud standard rate)
   val uart = Module(new Uart(frequency = 50000000, baudRate = 115200))
+
+  // Machine Timer peripheral (for FreeRTOS tick interrupts)
+  val machine_timer = Module(new MachineTimer)
 
   val cpu         = Module(new CPU)
   val dummy       = Module(new DummySlave)
@@ -87,7 +96,8 @@ class Top extends Module {
   bus_switch.io.slaves(0) <> mem_slave.io.channels
   bus_switch.io.slaves(1) <> vga.io.channels
   bus_switch.io.slaves(2) <> uart.io.channels
-  for (i <- 3 until Parameters.SlaveDeviceCount) {
+  bus_switch.io.slaves(3) <> machine_timer.io.channels
+  for (i <- 4 until Parameters.SlaveDeviceCount) {
     bus_switch.io.slaves(i) <> dummy.io.channels
   }
 
@@ -105,8 +115,15 @@ class Top extends Module {
   uart.io.rxd       := io.uart_rxd
   io.uart_interrupt := uart.io.signal_interrupt
 
-  // Interrupt
-  cpu.io.interrupt_flag := io.signal_interrupt
+  // Machine Timer connections
+  io.timer_mtip     := machine_timer.io.mtip
+  io.timer_mtime    := machine_timer.io.debug_mtime
+  io.timer_mtimecmp := machine_timer.io.debug_mtimecmp
+
+  // Interrupt: Wire machine timer interrupt to CPU
+  // TODO: Add proper interrupt controller (PLIC) for multiple sources
+  // For now, OR the timer and UART interrupts together
+  cpu.io.interrupt_flag := io.signal_interrupt || machine_timer.io.mtip
 
   // Debug interfaces
   cpu.io.debug_read_address     := io.cpu_debug_read_address
