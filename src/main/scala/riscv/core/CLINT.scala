@@ -40,9 +40,14 @@ class CLINT extends Module {
     io.jump_address,
     io.instruction_address_if,
   )
-  val mstatus_disable_interrupt = io.csr_bundle.mstatus(31, 4) ## 0.U(1.W) ## io.csr_bundle.mstatus(2, 0)
+  // Trap entry: MIE (bit 3) -> MPIE (bit 7), then clear MIE
+  val mstatus_disable_interrupt =
+    io.csr_bundle.mstatus(31, 8) ## io.csr_bundle.mstatus(3) ## io.csr_bundle.mstatus(6, 4) ## 0.U(1.W) ## io.csr_bundle
+      .mstatus(2, 0)
+  // mret: MPIE (bit 7) -> MIE (bit 3), then set MPIE to 1
   val mstatus_recover_interrupt =
-    io.csr_bundle.mstatus(31, 4) ## io.csr_bundle.mstatus(7) ## io.csr_bundle.mstatus(2, 0)
+    io.csr_bundle.mstatus(31, 8) ## 1.U(1.W) ## io.csr_bundle.mstatus(6, 4) ## io.csr_bundle.mstatus(7) ## io.csr_bundle
+      .mstatus(2, 0)
 
   // Check individual interrupt source enable based on interrupt type
   val interrupt_source_enabled = Mux(

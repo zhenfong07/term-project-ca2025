@@ -11,12 +11,10 @@ import bus.BusSwitch
 import chisel3._
 import chisel3.stage.ChiselStage
 import peripheral.DummySlave
-import peripheral.MachineTimer
 import peripheral.Uart
 import peripheral.VGA
 import riscv.core.CPU
 import riscv.Parameters
-import chisel3.util._ 
 
 class Top extends Module {
   val io = IO(new Bundle {
@@ -43,31 +41,21 @@ class Top extends Module {
     val uart_rxd       = Input(UInt(1.W))  // UART RX data
     val uart_interrupt = Output(Bool())    // UART interrupt signal
 
-    // Timer interrupt
-    val timer_interrupt = Output(Bool())
-
-    // Timer debug outputs
-    val timer_debug_mtime    = Output(UInt(64.W))
-    val timer_debug_mtimecmp = Output(UInt(64.W))
-
     val cpu_debug_read_address     = Input(UInt(Parameters.PhysicalRegisterAddrWidth))
     val cpu_debug_read_data        = Output(UInt(Parameters.DataWidth))
     val cpu_csr_debug_read_address = Input(UInt(Parameters.CSRRegisterAddrWidth))
     val cpu_csr_debug_read_data    = Output(UInt(Parameters.DataWidth))
   })
 
-  // Memory controlled in C++ code
+  // AXI4-Lite memory model provided by Verilator C++ harness (sim.cpp)
   val mem_slave = Module(new AXI4LiteSlave(Parameters.AddrBits, Parameters.DataBits))
   io.mem_slave <> mem_slave.io.bundle
 
   // VGA peripheral
   val vga = Module(new VGA)
 
-  // UART peripheral (115200 baud at 50MHz system clock)
+  // UART peripheral (115200 baud standard rate)
   val uart = Module(new Uart(frequency = 50000000, baudRate = 115200))
-
-  // MachineTimer for FreeRTOS
-  val timer = Module(new MachineTimer)
 
   val cpu         = Module(new CPU)
   val dummy       = Module(new DummySlave)
@@ -99,8 +87,7 @@ class Top extends Module {
   bus_switch.io.slaves(0) <> mem_slave.io.channels
   bus_switch.io.slaves(1) <> vga.io.channels
   bus_switch.io.slaves(2) <> uart.io.channels
-  bus_switch.io.slaves(3) <> timer.io.channels
-  for (i <- 4 until Parameters.SlaveDeviceCount) {
+  for (i <- 3 until Parameters.SlaveDeviceCount) {
     bus_switch.io.slaves(i) <> dummy.io.channels
   }
 
@@ -118,15 +105,8 @@ class Top extends Module {
   uart.io.rxd       := io.uart_rxd
   io.uart_interrupt := uart.io.signal_interrupt
 
-  // Timer connection
-  io.timer_interrupt := timer.io.mtip
-
-  // Timer debug outputs
-  io.timer_debug_mtime    := timer.io.debug_mtime
-  io.timer_debug_mtimecmp := timer.io.debug_mtimecmp
-
-  // Interrupt vector: bit 0 = timer, bit 1 = external
-  cpu.io.interrupt_flag := Cat(0.U(30.W), io.signal_interrupt, timer.io.mtip)
+  // Interrupt
+  cpu.io.interrupt_flag := io.signal_interrupt
 
   // Debug interfaces
   cpu.io.debug_read_address     := io.cpu_debug_read_address

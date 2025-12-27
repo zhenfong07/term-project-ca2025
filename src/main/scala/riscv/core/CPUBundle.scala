@@ -32,7 +32,7 @@ class CPUBundle extends Bundle {
   val csr_debug_read_address = Input(UInt(Parameters.CSRRegisterAddrWidth))
   val csr_debug_read_data    = Output(UInt(Parameters.DataWidth))
 
-  // Intercepts CPU memory access for bus routing
+  // Bus address and write strobes for BusSwitch/arbiter AXI4-Lite routing
   val bus_address            = Output(UInt(Parameters.AddrWidth))
   val debug_bus_write_enable = Output(Bool())
   val debug_bus_write_data   = Output(UInt(Parameters.DataWidth))
