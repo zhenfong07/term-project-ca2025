@@ -18,3 +18,10 @@ obj_dir/
 *.swp
 *~
 .idea/
+test_run_dir/MachineTimer_should_assert_mtip_when_mtime__mtimecmp/MachineTimer.lo.fir
+.gitignore
+test_run_dir/MachineTimer_should_read_mtime_correctly_via_AXI4Lite/MachineTimer.lo.fir
+test_run_dir/MachineTimer_should_clear_interrupt_when_writing_higher_mtimecmp/MachineTimer.lo.fir
+docs/INTEGRATION_STATUS.md
+docs/MEMORY_MAP.md
+test_run_dir/MachineTimer_should_increment_mtime_every_cycle/MachineTimer.lo.fir
