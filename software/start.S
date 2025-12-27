@@ -5,12 +5,16 @@
     .section .text.init
     .global _start
     .global _exit
+    .extern freertos_risc_v_trap_handler
 
 _start:
     la sp, _stack_top
     
     andi sp, sp, -16 /* alignment 16 byte to avoid error when calling FreeRTOS */
     /* 1. Disable global interrupts (safe during startup) */
+    la t0, freertos_risc_v_trap_handler
+    csrw mtvec, t0
+    
     csrw mie, zero
     csrw mip, zero
 

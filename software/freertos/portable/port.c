@@ -85,18 +85,16 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
     pxTopOfStack = ( StackType_t * ) ( ( ( uintptr_t ) pxTopOfStack ) & ~((uintptr_t)0xF) );
     pxTopOfStack-=32;
     for (int i=0;i<32;i++){
-        pxTopOfStack[i] = ( StackType_t ) 0xdeadbeef;
+        pxTopOfStack[i] = ( StackType_t ) 0;
     }
 
      pxTopOfStack[0] = ( StackType_t ) pxCode;
-
-     pxTopOfStack[1] = ( StackType_t ) 0;
 
      pxTopOfStack[7] = ( StackType_t ) pvParameters;
 
      pxTopOfStack[30] = ( StackType_t ) portINITIAL_MSTATUS;
 
-     pxTopOfStack[31] = ( StackType_t ) 0x00000000;
+     pxTopOfStack[1] = ( StackType_t ) 0;
 
 
     

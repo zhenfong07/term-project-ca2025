@@ -25,10 +25,11 @@ CFLAGS = -march=rv32im_zicsr -mabi=ilp32 -mcmodel=medany \
 # -Wl,--gc-sections            : Remove unused sections to reduce memory footprint
 LDFLAGS = -T link.lds -nostartfiles -nostdlib   -Wl,--gc-sections
 
+START_SRC = start.S 
+START_OBJ= $(START_SRC:.S=.o)
 # Source files
 # Includes: main application, startup code, port layer, and FreeRTOS kernel
 SRCS = main.c \
-       start.S \
        $(PORT_DIR)/port.c \
        $(PORT_DIR)/portasm.S \
        $(FREERTOS_DIR)/tasks.c \
@@ -38,8 +39,10 @@ SRCS = main.c \
        $(FREERTOS_DIR)/heap_4.c
 
 # Convert .c/.S source list to .o object list
-OBJS = $(SRCS:.c=.o)
-OBJS := $(OBJS:.S=.o)
+OTHER_OBJS = $(SRCS:.c=.o)
+OTHER_OBJS := $(OTHER_OBJS:.S=.o)
+
+OBJS = $(START_OBJ) $(OTHER_OBJS)
 
 # Output target name
 TARGET = main
