@@ -293,6 +293,7 @@ class CSR extends Module {
       CSRRegister.MSTATUS  -> mstatus,
       CSRRegister.MIE      -> mie,
       CSRRegister.MTVEC    -> mtvec,
+      CSRRegister.MIP      -> mip,
       CSRRegister.MSCRATCH -> mscratch,
       CSRRegister.MEPC     -> mepc,
       CSRRegister.MCAUSE   -> mcause,
