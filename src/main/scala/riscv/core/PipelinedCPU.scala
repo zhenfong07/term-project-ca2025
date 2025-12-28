@@ -487,6 +487,9 @@ class PipelinedCPU extends Module {
   clint.io.interrupt_flag         := io.interrupt_flag // Direct connection, bypass IF2ID pipeline delay
   clint.io.csr_bundle <> csr_regs.io.clint_access_bundle
 
+  // Connect interrupt signals to CSR 
+  csr_regs.io.interrupt_flag := io.interrupt_flag
+
   csr_regs.io.reg_read_address_id    := id.io.ex_csr_address
   csr_regs.io.reg_write_enable_ex    := id2ex.io.output_csr_write_enable
   csr_regs.io.reg_write_address_ex   := id2ex.io.output_csr_address
