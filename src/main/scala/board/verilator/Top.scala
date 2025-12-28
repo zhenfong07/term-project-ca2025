@@ -9,6 +9,7 @@ import bus.AXI4LiteSlaveBundle
 import bus.BusArbiter
 import bus.BusSwitch
 import chisel3._
+import chisel3.util._
 import chisel3.stage.ChiselStage
 import peripheral.DummySlave
 import peripheral.MachineTimer
@@ -120,10 +121,18 @@ class Top extends Module {
   io.timer_mtime    := machine_timer.io.debug_mtime
   io.timer_mtimecmp := machine_timer.io.debug_mtimecmp
 
-  // Interrupt: Wire machine timer interrupt to CPU
-  // TODO: Add proper interrupt controller (PLIC) for multiple sources
-  // For now, OR the timer and UART interrupts together
-  cpu.io.interrupt_flag := io.signal_interrupt || machine_timer.io.mtip
+  // Interrupt info for CPU
+  //   Bit 0: Machine Timer Interrupt (MTIP) 
+  //   Bit 1-10: Reserved
+  //   Bit 11: Machine External Interrupt (MEIP) 
+  //   Bit 12-31: Reserved
+  interrupt_vector := Cat(
+    0.U(20.W),                     // Bits 31-12
+    io.signal_interrupt,           // Bit 11: MEIP
+    0.U(10.W),                     // Bits 10-1
+    machine_timer.io.mtip          // Bit 0: MTIP 
+  )
+  cpu.io.interrupt_flag := interrupt_vector
 
   // Debug interfaces
   cpu.io.debug_read_address     := io.cpu_debug_read_address
