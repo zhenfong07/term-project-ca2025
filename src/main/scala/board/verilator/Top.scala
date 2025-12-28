@@ -122,10 +122,7 @@ class Top extends Module {
   io.timer_mtimecmp := machine_timer.io.debug_mtimecmp
 
   // Interrupt info for CPU
-  //   Bit 0: Machine Timer Interrupt (MTIP) 
-  //   Bit 1-10: Reserved
-  //   Bit 11: Machine External Interrupt (MEIP) 
-  //   Bit 12-31: Reserved
+ val interrupt_vector = WireDefault(0.U(32.W))
   interrupt_vector := Cat(
     0.U(20.W),                     // Bits 31-12
     io.signal_interrupt,           // Bit 11: MEIP
