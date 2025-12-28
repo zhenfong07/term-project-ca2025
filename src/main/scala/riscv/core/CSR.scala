@@ -145,6 +145,9 @@ class CSR extends Module {
 
     val clint_access_bundle = Flipped(new CSRDirectAccessBundle)
 
+    // Interrupt signals for other sources like timer, UART, etc.
+    val interrupt_flag = Input(UInt(Parameters.InterruptFlagWidth))
+
     // Performance counter inputs (directly from pipeline stages)
     val instruction_retired  = Input(Bool()) // Instruction completed in WB stage
     val branch_misprediction = Input(Bool()) // BTB or RAS misprediction detected
@@ -163,6 +166,12 @@ class CSR extends Module {
   val mscratch = RegInit(UInt(Parameters.DataWidth), 0.U)
   val mepc     = RegInit(UInt(Parameters.DataWidth), 0.U)
   val mcause   = RegInit(UInt(Parameters.DataWidth), 0.U)
+
+  // Bit 0: Reserved (always 0)
+  // Bit 3: MSIP (Machine Software Interrupt) todo
+  // Bit 7: MTIP (Machine Timer Interrupt) 
+  // Bit 11: MEIP (Machine External Interrupt) 
+  val mip = WireDefault(io.interrupt_flag)
 
   // Machine Counter-Inhibit Register (mcountinhibit)
   // Bit 0: CY - inhibit mcycle, Bit 2: IR - inhibit minstret
