@@ -1,12 +1,17 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-#define UART_BASE    0x40000000
-#define UART_TX_REG  (*(volatile unsigned int *)(UART_BASE + 0x00))
+#define UART_BASE       0x40000000
+#define UART_SEND       (*(volatile unsigned int *)(UART_BASE + 0x00))
+#define UART_RECV       (*(volatile unsigned int *)(UART_BASE + 0x04))
+#define UART_STATUS     (*(volatile unsigned int *)(UART_BASE + 0x08))
 
+// Wait for TX ready before sending
 void uart_putc(char c) {
-    UART_TX_REG = c;
+    while (!(UART_STATUS & 0x01));  // Wait for TX ready (bit 0)
+    UART_SEND = c;
 }
+
 void uart_puts(const char *s) {
     while (*s) {
         uart_putc(*s++);

@@ -39,8 +39,8 @@
 
 /* Timer CLINT */
 /*  */
-#define configMTIME_BASE_ADDRESS                ( 0x00003000UL )
-#define configMTIMECMP_BASE_ADDRESS             ( 0x00003008UL )
+#define configMTIME_BASE_ADDRESS                ( 0x60000000UL )
+#define configMTIMECMP_BASE_ADDRESS             ( 0x60000008UL )
 
 /*  ISR (Interrupt Service Routine) */
 #define configISR_STACK_SIZE_WORDS              ( 200 )
