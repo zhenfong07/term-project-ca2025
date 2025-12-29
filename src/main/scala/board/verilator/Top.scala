@@ -122,7 +122,7 @@ class Top extends Module {
   io.timer_mtimecmp := machine_timer.io.debug_mtimecmp
 
   // Interrupt info for CPU
- val interrupt_vector = WireDefault(0.U(32.W))
+  val interrupt_vector = WireDefault(0.U(32.W))
   interrupt_vector := Cat(
     0.U(20.W),                     // Bits 31-12
     io.signal_interrupt,           // Bit 11: MEIP

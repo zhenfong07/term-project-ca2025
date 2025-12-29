@@ -89,6 +89,7 @@ get_epc:
 .weak trap_handler
 trap_handler:
   ret
+.globl __trap_entry
 __trap_entry:
   csrw mscratch, sp
   addi sp, sp, -128

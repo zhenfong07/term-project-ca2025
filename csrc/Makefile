@@ -12,7 +12,7 @@ LD := $(CROSS_COMPILE)ld
 OBJCOPY := $(CROSS_COMPILE)objcopy
 
 # Program targets (add new programs here)
-PROGRAMS := nyancat uart shell
+PROGRAMS := nyancat uart shell timer_test
 BINARIES := $(PROGRAMS:%=%.asmbin)
 
 %.asmbin: %.elf
@@ -37,6 +37,11 @@ shell.asmbin: shell.c mmio.h init.o link.lds
 	$(CC) $(CFLAGS) -c -o shell.o shell.c
 	$(CROSS_COMPILE)ld -o shell.elf -T link.lds $(LDFLAGS) shell.o init.o
 	$(OBJCOPY) -O binary -j .text -j .data shell.elf $@
+
+timer_test.asmbin: timer_test.c mmio.h init.o link.lds
+	$(CC) $(CFLAGS) -c -o timer_test.o timer_test.c
+	$(CROSS_COMPILE)ld -o timer_test.elf -T link.lds $(LDFLAGS) timer_test.o init.o
+	$(OBJCOPY) -O binary -j .text -j .data timer_test.elf $@
 
 init.o: init.S
 	$(AS) -R $(ASFLAGS) -o $@ $<
