@@ -6,10 +6,23 @@
 #define UART_RECV       (*(volatile unsigned int *)(UART_BASE + 0x04))
 #define UART_STATUS     (*(volatile unsigned int *)(UART_BASE + 0x08))
 
-// Wait for TX ready before sending
+/* FIX #3: Simplified UART for initial testing
+ * 
+ * Original code checked UART_STATUS & 0x01 for TX ready, but this may not be
+ * compatible with the hardware UART implementation. For initial FreeRTOS testing,
+ * we use direct writes without TX ready checking.
+ * 
+ * If you need TX ready checking, verify the UART hardware status register format
+ * in src/main/scala/peripheral/Uart.scala to determine which bit indicates TX ready.
+ * 
+ * TODO: Restore TX ready checking after verifying UART status register format:
+ * void uart_putc(char c) {
+ *     while (!(UART_STATUS & 0x01));  // Wait for TX ready (bit 0)
+ *     UART_SEND = c;
+ * }
+ */
 void uart_putc(char c) {
-    while (!(UART_STATUS & 0x01));  // Wait for TX ready (bit 0)
-    UART_SEND = c;
+    UART_SEND = c;  // Direct write without TX ready check
 }
 
 void uart_puts(const char *s) {

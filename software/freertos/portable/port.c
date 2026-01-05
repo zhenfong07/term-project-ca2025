@@ -39,7 +39,14 @@ size_t strlen(const char *s) {
 #define CLINT_MTIME_LOW     ( *(volatile uint32_t * )( configMTIME_BASE_ADDRESS + 0x0 ) )
 #define CLINT_MTIME_HIGH    ( *(volatile uint32_t * )( configMTIME_BASE_ADDRESS + 0x4 ) )
 
-#define portINITIAL_MSTATUS     ( 0x1880 ) 
+/* FIX #1: Enable MIE bit (bit 3) for global interrupt enable
+ * Changed from 0x1880 to 0x1888
+ * 0x1888 = 0001 1000 1000 1000 in binary
+ * Bit 3 (MIE)  = 1  Global interrupt enable
+ * Bit 7 (MPIE) = 1  Previous interrupt enable (preserved on trap entry)
+ * Bit 11       = 1  (compatibility with older implementations)
+ */
+#define portINITIAL_MSTATUS     ( 0x1888 )
 
 /* Stack */
 #ifdef configISR_STACK_SIZE_WORDS
@@ -102,37 +109,117 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
     return pxTopOfStack;
 }
 
-/* --- START SCHEDULER (MOST IMPORTANT PART) --- */
+/* FIX #2: Configure xPortStartScheduler with proper CSR setup
+ * 
+ * This function is critical for FreeRTOS to work correctly on RISC-V hardware.
+ * It must configure three essential CSR registers before starting the scheduler:
+ * 
+ * 1. mtvec  - Machine Trap Vector: Points to interrupt handler address
+ * 2. mie    - Machine Interrupt Enable: Enables specific interrupt sources
+ * 3. mstatus - Machine Status: Enables global interrupts
+ * 
+ * Without proper configuration, the CPU will not handle timer interrupts correctly
+ * and FreeRTOS task switching will fail.
+ */
 BaseType_t xPortStartScheduler( void )
 {
     extern void xPortStartFirstTask( void );
-    extern void freertos_risc_v_trap_handler( void ); // Assembly interrupt handler
+    extern void freertos_risc_v_trap_handler( void );  // Defined in portasm.S
 
     #if ( configASSERT_DEFINED == 1 )
     {
+        /* Verify ISR stack is properly aligned to 16 bytes */
         configASSERT( ( xISRStackTop & portBYTE_ALIGNMENT_MASK ) == 0 );
     }
     #endif
 
-    /* 1. Set mtvec to FreeRTOS Trap Handler */
-    /* Without this, CPU will jump randomly on interrupts! */
-    __asm__ volatile( "csrw mtvec, %0" :: "r"( freertos_risc_v_trap_handler ) );
+    /* STEP 1: Configure trap vector (mtvec register)
+     * 
+     * The mtvec register stores the address of the interrupt/exception handler.
+     * When any interrupt occurs (timer, external, ecall), the CPU will jump to
+     * this address. We point it to freertos_risc_v_trap_handler (in portasm.S).
+     * 
+     * Without this, interrupts will jump to address 0x00 and crash!
+     */
+    __asm__ volatile(
+        "la t0, freertos_risc_v_trap_handler\n"  // Load handler address
+        "csrw mtvec, t0\n"                        // Write to mtvec CSR
+        ::: "t0"
+    );
 
-    /* 2. Initialize Timer */
+    /* STEP 2: Setup initial timer interrupt
+     * 
+     * Configure mtimecmp register to trigger the first tick interrupt.
+     * This sets up when the next context switch will occur.
+     */
     vPortSetupTimerInterrupt();
 
-    /* 3. Enable Timer (bit 7) and External (bit 11) interrupts */
-    __asm volatile ( "csrs mie, %0" ::"r" ( 0x880 ) );
+    /* STEP 3: Enable specific interrupt sources in mie register
+     * 
+     * The mie (Machine Interrupt Enable) register controls which interrupt
+     * sources are enabled. We need to enable:
+     * 
+     * Bit 7  (0x80)  = MTIE  Machine Timer Interrupt Enable
+     * Bit 11 (0x800) = MEIE  Machine External Interrupt Enable
+     * 
+     * Combined: 0x880 = 0b100010000000
+     * 
+     * Even if mstatus.MIE is set, interrupts won't fire unless their
+     * corresponding bit in mie is also set.
+     */
+    __asm__ volatile(
+        "li t0, 0x880\n"     // Load 0x880 (bits 7 and 11)
+        "csrs mie, t0\n"     // Set bits in mie register (OR operation)
+        ::: "t0"
+    );
 
-    /* 4. Jump to the first task */
+    /* STEP 4: Enable global interrupts in mstatus register
+     * 
+     * The mstatus.MIE bit (bit 3) is the global interrupt enable.
+     * Even if mie bits are set, no interrupts will fire if MIE=0.
+     * 
+     * This is the final gate - once we set this bit, interrupts are live!
+     * 
+     * Note: portINITIAL_MSTATUS already has MIE=1 (0x1888), but we set it
+     * explicitly here to be absolutely certain interrupts are enabled.
+     */
+    __asm__ volatile(
+        "li t0, 0x08\n"      // Load 0x08 (bit 3 = MIE)
+        "csrs mstatus, t0\n" // Set MIE bit in mstatus
+        ::: "t0"
+    );
+
+    /* STEP 5: Start the first task
+     * 
+     * This function (defined in portasm.S) loads the first task's context
+     * from pxCurrentTCB and begins execution. After this point, FreeRTOS
+     * is running and tasks will be scheduled by timer interrupts.
+     * 
+     * This function never returns - control is transferred to the task.
+     */
     xPortStartFirstTask();
 
-    return 0;
+    /* Should never reach here - scheduler runs forever */
+    return pdFALSE;
 }
 
-void vPortEndScheduler( void ) { for( ; ; ); }
+/* Placeholder function - scheduler never ends */
+void vPortEndScheduler( void ) 
+{ 
+    /* FreeRTOS scheduler runs forever, this function should never be called */
+    for( ; ; ); 
+}
+
+/* External interrupt handler placeholder (not used in this implementation) */
 void vPortExternalInterruptHandler( void ) {}
-void vTaskEnterCritical( void ) { portDISABLE_INTERRUPTS(); xCriticalNesting++; }
+
+/* Critical section management */
+void vTaskEnterCritical( void ) 
+{ 
+    portDISABLE_INTERRUPTS(); 
+    xCriticalNesting++; 
+}
+
 void vTaskExitCritical( void ){
     if (xCriticalNesting > 0){
         xCriticalNesting--;
