@@ -607,6 +607,12 @@ class PipelinedCPU extends Module {
   io.debug_reg_a3                                := 0.U  // Would need separate debug channel
   io.debug_reg_a5                                := 0.U  // Would need separate debug channel
   
+  // Debug forwarding signals
+  io.debug_reg1_forward_ex                       := forwarding.io.reg1_forward_ex
+  io.debug_rs1_ex                                := forwarding.io.rs1_ex
+  io.debug_rd_mem                                := forwarding.io.rd_mem
+  io.debug_reg_write_enable_mem                  := forwarding.io.reg_write_enable_mem
+  
   io.axi4_channels.read_address_channel.ARADDR   := 0.U
   io.axi4_channels.read_address_channel.ARPROT   := 0.U
   io.axi4_channels.read_address_channel.ARVALID  := false.B

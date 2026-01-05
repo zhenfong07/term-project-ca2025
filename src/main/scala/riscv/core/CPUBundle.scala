@@ -45,4 +45,10 @@ class CPUBundle extends Bundle {
   val debug_reg_a2 = Output(UInt(Parameters.DataWidth))  // x12 = a2
   val debug_reg_a3 = Output(UInt(Parameters.DataWidth))  // x13 = a3
   val debug_reg_a5 = Output(UInt(Parameters.DataWidth))  // x15 = a5
+  
+  // Debug: Forwarding signals
+  val debug_reg1_forward_ex = Output(UInt(2.W))
+  val debug_rs1_ex = Output(UInt(Parameters.PhysicalRegisterAddrWidth))
+  val debug_rd_mem = Output(UInt(Parameters.PhysicalRegisterAddrWidth))
+  val debug_reg_write_enable_mem = Output(Bool())
 }

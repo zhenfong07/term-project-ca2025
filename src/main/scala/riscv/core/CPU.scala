@@ -86,6 +86,10 @@ class CPU(val implementation: Int = ImplementationType.FiveStageFinal) extends M
       io.debug_reg_a2 := cpu.io.debug_reg_a2
       io.debug_reg_a3 := cpu.io.debug_reg_a3
       io.debug_reg_a5 := cpu.io.debug_reg_a5
+      io.debug_reg1_forward_ex := cpu.io.debug_reg1_forward_ex
+      io.debug_rs1_ex := cpu.io.debug_rs1_ex
+      io.debug_rd_mem := cpu.io.debug_rd_mem
+      io.debug_reg_write_enable_mem := cpu.io.debug_reg_write_enable_mem
 
       // Connect wrapper memory_bundle outputs (pass through from CPU)
       io.memory_bundle.address      := cpu.io.memory_bundle.address

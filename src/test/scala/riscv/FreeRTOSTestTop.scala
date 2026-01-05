@@ -38,6 +38,12 @@ class FreeRTOSTestTop(exeFilename: String) extends Module {
     val debug_reg_a3 = Output(UInt(Parameters.DataWidth))
     val debug_reg_a5 = Output(UInt(Parameters.DataWidth))
     
+    // Forwarding debug signals
+    val debug_reg1_forward_ex = Output(UInt(2.W))
+    val debug_rs1_ex = Output(UInt(Parameters.PhysicalRegisterAddrWidth))
+    val debug_rd_mem = Output(UInt(Parameters.PhysicalRegisterAddrWidth))
+    val debug_reg_write_enable_mem = Output(Bool())
+    
     // Pipeline stall debug
     val mem_stall_flag = Output(Bool())
     
@@ -180,6 +186,11 @@ class FreeRTOSTestTop(exeFilename: String) extends Module {
   io.debug_reg_a2 := cpu.io.debug_reg_a2
   io.debug_reg_a3 := cpu.io.debug_reg_a3
   io.debug_reg_a5 := cpu.io.debug_reg_a5
+  io.debug_reg1_forward_ex := cpu.io.debug_reg1_forward_ex
+  io.debug_rs1_ex := cpu.io.debug_rs1_ex
+  io.debug_rd_mem := cpu.io.debug_rd_mem
+  io.debug_reg_write_enable_mem := cpu.io.debug_reg_write_enable_mem
+  io.mem_stall_flag := false.B  // TODO: connect to actual stall signal if needed
   
   // Timer debug outputs
   io.timer_mtip     := machine_timer.io.mtip
