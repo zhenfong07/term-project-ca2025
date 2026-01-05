@@ -39,4 +39,10 @@ class CPUBundle extends Bundle {
   
   // Debug: ALU result from EX2MEM stage (for store address debugging)
   val alu_result_debug       = Output(UInt(Parameters.DataWidth))
+  
+  // Debug: Register file outputs for deep debugging
+  val debug_reg_sp = Output(UInt(Parameters.DataWidth))  // x2 = sp
+  val debug_reg_a2 = Output(UInt(Parameters.DataWidth))  // x12 = a2
+  val debug_reg_a3 = Output(UInt(Parameters.DataWidth))  // x13 = a3
+  val debug_reg_a5 = Output(UInt(Parameters.DataWidth))  // x15 = a5
 }

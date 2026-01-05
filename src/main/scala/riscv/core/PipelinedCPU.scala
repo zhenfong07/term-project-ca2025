@@ -598,6 +598,15 @@ class PipelinedCPU extends Module {
   // Initialize unused CPUBundle signals (used by wrapper, not by pipeline core)
   io.bus_address                                 := 0.U
   io.alu_result_debug                            := ex2mem.io.output_alu_result
+  
+  // Debug register outputs - use the existing debug interface
+  // Read registers by setting debug_read_address in testbench
+  // For now, just expose first few registers statically
+  io.debug_reg_sp                                := Mux(io.debug_read_address === 2.U, io.debug_read_data, 0.U)
+  io.debug_reg_a2                                := 0.U  // Would need separate debug channel
+  io.debug_reg_a3                                := 0.U  // Would need separate debug channel
+  io.debug_reg_a5                                := 0.U  // Would need separate debug channel
+  
   io.axi4_channels.read_address_channel.ARADDR   := 0.U
   io.axi4_channels.read_address_channel.ARPROT   := 0.U
   io.axi4_channels.read_address_channel.ARVALID  := false.B

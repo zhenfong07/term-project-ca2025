@@ -31,6 +31,16 @@ class FreeRTOSTestTop(exeFilename: String) extends Module {
     // ALU result debug (for store address debugging)
     val alu_result_mem = Output(UInt(Parameters.DataWidth))
     
+    // Register file debug outputs
+    val cpu_pc      = Output(UInt(Parameters.AddrWidth))
+    val debug_reg_sp = Output(UInt(Parameters.DataWidth))
+    val debug_reg_a2 = Output(UInt(Parameters.DataWidth))
+    val debug_reg_a3 = Output(UInt(Parameters.DataWidth))
+    val debug_reg_a5 = Output(UInt(Parameters.DataWidth))
+    
+    // Pipeline stall debug
+    val mem_stall_flag = Output(Bool())
+    
     // Timer debug outputs
     val timer_mtip     = Output(Bool())
     val timer_mtime    = Output(UInt(64.W))
@@ -165,6 +175,11 @@ class FreeRTOSTestTop(exeFilename: String) extends Module {
   // Bus address debug output
   io.bus_address := cpu.io.bus_address
   io.alu_result_mem := cpu.io.alu_result_debug
+  io.cpu_pc := cpu.io.instruction_address
+  io.debug_reg_sp := cpu.io.debug_reg_sp
+  io.debug_reg_a2 := cpu.io.debug_reg_a2
+  io.debug_reg_a3 := cpu.io.debug_reg_a3
+  io.debug_reg_a5 := cpu.io.debug_reg_a5
   
   // Timer debug outputs
   io.timer_mtip     := machine_timer.io.mtip
