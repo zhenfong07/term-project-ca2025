@@ -3,9 +3,9 @@ ENTRY(_start)
 
 MEMORY
 {
-  /* Define a 32KB RAM region starting at address 0x00000000 */
-  /* If the hardware RAM size is changed, update LENGTH accordingly */
-  RAM (rwx) : ORIGIN = 0x00000000, LENGTH = 32K
+  /* Define a 32KB RAM region starting at address 0x00001000 (EntryAddress) */
+  /* This matches Parameters.EntryAddress in the testbench */
+  RAM (rwx) : ORIGIN = 0x00001000, LENGTH = 28K
 }
 
 SECTIONS

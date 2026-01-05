@@ -36,4 +36,7 @@ class CPUBundle extends Bundle {
   val bus_address            = Output(UInt(Parameters.AddrWidth))
   val debug_bus_write_enable = Output(Bool())
   val debug_bus_write_data   = Output(UInt(Parameters.DataWidth))
+  
+  // Debug: ALU result from EX2MEM stage (for store address debugging)
+  val alu_result_debug       = Output(UInt(Parameters.DataWidth))
 }

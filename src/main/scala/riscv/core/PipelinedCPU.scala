@@ -597,6 +597,7 @@ class PipelinedCPU extends Module {
 
   // Initialize unused CPUBundle signals (used by wrapper, not by pipeline core)
   io.bus_address                                 := 0.U
+  io.alu_result_debug                            := ex2mem.io.output_alu_result
   io.axi4_channels.read_address_channel.ARADDR   := 0.U
   io.axi4_channels.read_address_channel.ARPROT   := 0.U
   io.axi4_channels.read_address_channel.ARVALID  := false.B
