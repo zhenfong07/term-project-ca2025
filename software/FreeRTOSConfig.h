@@ -13,10 +13,10 @@
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION 0
 #define configUSE_TICKLESS_IDLE                 0
 #define configCPU_CLOCK_HZ                      ( 50000000 ) 
-#define configTICK_RATE_HZ                      ( ( TickType_t ) 1000 )
+#define configTICK_RATE_HZ                      ( ( TickType_t ) 100 )
 #define configMAX_PRIORITIES                    ( 5 )
 #define configMINIMAL_STACK_SIZE                ( ( unsigned short ) 128 )
-#define configTOTAL_HEAP_SIZE                   ( ( size_t ) 4096 ) // 4KB Heap
+#define configTOTAL_HEAP_SIZE                   ( ( size_t ) 8192 ) // 4KB Heap
 #define configMAX_TASK_NAME_LEN                 ( 16 )
 #define configUSE_16_BIT_TICKS                  0
 #define configIDLE_SHOULD_YIELD                 0
@@ -66,5 +66,12 @@ to exclude the API function. */
 #define INCLUDE_vTaskDelay                      1
 #define INCLUDE_eTaskGetState                   1
 #define INCLUDE_xTimerPendFunctionCall          1
+
+/* Assert for debugging */
+#define configASSERT_DEFINED 1
+#define configASSERT( x ) if( ( x ) == 0 ) { \
+    *(volatile uint32_t*)0x60000008 = 0xDEADDEAD; \
+    for( ;; ); \
+}
 
 #endif /* FREERTOS_CONFIG_H */
