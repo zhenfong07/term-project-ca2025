@@ -38,14 +38,7 @@ size_t strlen(const char *s) {
 #define CLINT_MTIMECMP_HIGH ( *(volatile uint32_t * )( configMTIMECMP_BASE_ADDRESS + 0x4 ) )
 #define CLINT_MTIME_LOW     ( *(volatile uint32_t * )( configMTIME_BASE_ADDRESS + 0x0 ) )
 #define CLINT_MTIME_HIGH    ( *(volatile uint32_t * )( configMTIME_BASE_ADDRESS + 0x4 ) )
-
-/* FIX #1: Enable MIE bit (bit 3) for global interrupt enable
- * Changed from 0x1880 to 0x1888
- * 0x1888 = 0001 1000 1000 1000 in binary
- * Bit 3 (MIE)  = 1  Global interrupt enable
- * Bit 7 (MPIE) = 1  Previous interrupt enable (preserved on trap entry)
- * Bit 11       = 1  (compatibility with older implementations)
- */
+//Changed from 0x1880 to 0x1888
 #define portINITIAL_MSTATUS     ( 0x1888 )
 
 /* Stack */
@@ -128,7 +121,6 @@ BaseType_t xPortStartScheduler( void )
 
     #if ( configASSERT_DEFINED == 1 )
     {
-        /* Verify ISR stack is properly aligned to 16 bytes */
         configASSERT( ( xISRStackTop & portBYTE_ALIGNMENT_MASK ) == 0 );
     }
     #endif
