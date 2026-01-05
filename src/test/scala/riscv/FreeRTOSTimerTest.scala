@@ -25,7 +25,7 @@ class FreeRTOSTimerTest extends AnyFlatSpec with ChiselScalatestTester {
       println()
       
       // Wait for ROM loading to finish
-      while(!dut.io.regs_debug_read_data.peek().litToBoolean) {
+      while(dut.io.signal.peek().litValue == 0) {
         dut.clock.step()
       }
       println("✓ ROM loaded, CPU starting...")
@@ -69,7 +69,7 @@ class FreeRTOSTimerTest extends AnyFlatSpec with ChiselScalatestTester {
       
       // Wait for ROM loading
       var cycleCount = 0
-      while(!dut.io.regs_debug_read_data.peek().litToBoolean) {
+      while(dut.io.signal.peek().litValue == 0) {
         dut.clock.step()
         cycleCount += 1
       }
@@ -144,7 +144,7 @@ class FreeRTOSTimerTest extends AnyFlatSpec with ChiselScalatestTester {
       
       // Wait for ROM loading
       var cycleCount = 0
-      while(!dut.io.regs_debug_read_data.peek().litToBoolean) {
+      while(dut.io.signal.peek().litValue == 0) {
         dut.clock.step()
         cycleCount += 1
       }
@@ -220,7 +220,7 @@ class FreeRTOSTimerTest extends AnyFlatSpec with ChiselScalatestTester {
       println()
       
       // Wait for ROM loading
-      while(!dut.io.regs_debug_read_data.peek().litToBoolean) {
+      while(dut.io.signal.peek().litValue == 0) {
         dut.clock.step()
       }
       println("✓ ROM loaded")
@@ -277,7 +277,7 @@ class FreeRTOSTimerTest extends AnyFlatSpec with ChiselScalatestTester {
       println()
       
       // Wait for ROM loading
-      while(!dut.io.regs_debug_read_data.peek().litToBoolean) {
+      while(dut.io.signal.peek().litValue == 0) {
         dut.clock.step()
       }
       println("✓ ROM loaded")
