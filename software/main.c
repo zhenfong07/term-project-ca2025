@@ -1,31 +1,14 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-// UART register offsets (see src/main/scala/peripheral/UART.scala)
 #define UART_BASE       0x40000000
-#define UART_STATUS     (*(volatile unsigned int *)(UART_BASE + 0x00))  // Read-only: TX ready (bit 0), RX valid (bit 1)
-#define UART_BAUD_RATE  (*(volatile unsigned int *)(UART_BASE + 0x04))  // Read-only: configured baud rate
-#define UART_INTERRUPT  (*(volatile unsigned int *)(UART_BASE + 0x08))  // Write-only: interrupt enable
-#define UART_RECV       (*(volatile unsigned int *)(UART_BASE + 0x0C))  // Read-only: received data
-#define UART_SEND       (*(volatile unsigned int *)(UART_BASE + 0x10))  // Write-only: transmit data
+#define UART_TX_DATA    (*(volatile uint32_t*)(UART_BASE + 0x10))
+#define UART_STATUS     (*(volatile uint32_t*)(UART_BASE + 0x14))
 
-/* FIX #3: Simplified UART for initial testing
- * 
- * Original code checked UART_STATUS & 0x01 for TX ready, but this may not be
- * compatible with the hardware UART implementation. For initial FreeRTOS testing,
- * we use direct writes without TX ready checking.
- * 
- * If you need TX ready checking, verify the UART hardware status register format
- * in src/main/scala/peripheral/Uart.scala to determine which bit indicates TX ready.
- * 
- * TODO: Restore TX ready checking after verifying UART status register format:
- * void uart_putc(char c) {
- *     while (!(UART_STATUS & 0x01));  // Wait for TX ready (bit 0)
- *     UART_SEND = c;
- * }
- */
+// Wait for TX ready before sending
 void uart_putc(char c) {
-    UART_SEND = c;  // Direct write without TX ready check
+    while (!(UART_STATUS & 0x40));  // Wait for TX FIFO not full (bit 6)
+    UART_TX_DATA = c;
 }
 
 void uart_puts(const char *s) {
@@ -57,18 +40,13 @@ void prvSetupHardware(void) {
 }
 
 int main(void) {
-    //  Task 1
-    xTaskCreate(vTask1, "Task1", 256, NULL, 1, NULL);
-    
-    //  Task 2 
-    xTaskCreate(vTask2, "Task2", 256, NULL, 1, NULL);
-    uart_puts("Starting FreeRTOS Scheduler...\n");
-
+    xTaskCreate(vTask1, "Task1", 128, NULL, 1, NULL);
+    xTaskCreate(vTask2, "Task2", 128, NULL, 1, NULL);
     vTaskStartScheduler();
 
-    // (Heap)
     while (1);
 }
+
 
 void vApplicationMallocFailedHook(void) { while(1); }
 void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName) { while(1); }
