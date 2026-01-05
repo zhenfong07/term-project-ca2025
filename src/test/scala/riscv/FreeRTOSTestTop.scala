@@ -22,6 +22,9 @@ class FreeRTOSTestTop(exeFilename: String) extends Module {
     val csr_debug_read_address  = Input(UInt(Parameters.CSRRegisterAddrWidth))
     val csr_debug_read_data     = Output(UInt(Parameters.DataWidth))
     
+    // Bus debug outputs
+    val bus_address = Output(UInt(Parameters.AddrWidth))
+    
     // Timer debug outputs
     val timer_mtip     = Output(Bool())
     val timer_mtime    = Output(UInt(64.W))
@@ -35,7 +38,7 @@ class FreeRTOSTestTop(exeFilename: String) extends Module {
   // Peripherals
   // ========================================================================
   
-  val mem             = Module(new Memory(8192))  // 8KB memory
+  val mem             = Module(new Memory(32768))  // 32KB memory (matches link.lds RAM size)
   val instruction_rom = Module(new InstructionROM(exeFilename))
   val rom_loader      = Module(new ROMLoader(instruction_rom.capacity))
   val machine_timer   = Module(new MachineTimer)
@@ -46,18 +49,10 @@ class FreeRTOSTestTop(exeFilename: String) extends Module {
   instruction_rom.io.address := rom_loader.io.rom_address
 
   // ========================================================================
-  // CPU with Clock Divider (4:1 ratio for AXI4-Lite compatibility)
+  // CPU (NO clock divider for testing - run at full speed)
   // ========================================================================
   
-  val CPU_clkdiv = RegInit(UInt(2.W), 0.U)
-  val CPU_tick   = Wire(Bool())
-  val CPU_next   = Wire(UInt(2.W))
-  CPU_next   := Mux(CPU_clkdiv === 3.U, 0.U, CPU_clkdiv + 1.U)
-  CPU_tick   := CPU_clkdiv === 0.U
-  CPU_clkdiv := CPU_next
-
-  withClock(CPU_tick.asClock) {
-    val cpu = Module(new CPU)
+  val cpu = Module(new CPU)
 
     // ========================================================================
     // Bus Switch for routing CPU to peripherals
@@ -77,8 +72,8 @@ class FreeRTOSTestTop(exeFilename: String) extends Module {
     bus_switch.io.slaves(0) <> mem_slave.io.channels
     
     // Slave 1: VGA - not used, connect to dummy (0x2000_0000 - 0x3FFF_FFFF)
-    // For now, we don't include VGA to keep test simple
-    // bus_switch.io.slaves(1) - leave disconnected
+    val dummy_vga = Module(new peripheral.DummySlave)
+    bus_switch.io.slaves(1) <> dummy_vga.io.channels
     
     // Slave 2: UART (0x4000_0000 - 0x5FFF_FFFF)
     bus_switch.io.slaves(2) <> uart.io.channels
@@ -86,9 +81,8 @@ class FreeRTOSTestTop(exeFilename: String) extends Module {
     // Slave 3: MachineTimer (0x6000_0000 - 0x7FFF_FFFF)
     bus_switch.io.slaves(3) <> machine_timer.io.channels
     
-    // Connect unused slaves to prevent hanging
-    for (i <- 1 until Parameters.SlaveDeviceCount if i != 2 && i != 3) {
-      // Create dummy slaves for unused slots
+    // Connect unused slaves (4-7) to prevent hanging
+    for (i <- 4 until Parameters.SlaveDeviceCount) {
       val dummy = Module(new peripheral.DummySlave)
       bus_switch.io.slaves(i) <> dummy.io.channels
     }
@@ -152,7 +146,6 @@ class FreeRTOSTestTop(exeFilename: String) extends Module {
     cpu.io.memory_bundle.write_data_accepted := false.B
     cpu.io.memory_bundle.busy                := false.B
     cpu.io.memory_bundle.granted             := true.B
-  }
 
   // ========================================================================
   // External Outputs
@@ -160,6 +153,9 @@ class FreeRTOSTestTop(exeFilename: String) extends Module {
   
   mem.io.debug_read_address := io.mem_debug_read_address
   io.mem_debug_read_data    := mem.io.debug_read_data
+  
+  // Bus address debug output
+  io.bus_address := cpu.io.bus_address
   
   // Timer debug outputs
   io.timer_mtip     := machine_timer.io.mtip

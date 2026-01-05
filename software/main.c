@@ -1,10 +1,13 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
+// UART register offsets (see src/main/scala/peripheral/UART.scala)
 #define UART_BASE       0x40000000
-#define UART_SEND       (*(volatile unsigned int *)(UART_BASE + 0x00))
-#define UART_RECV       (*(volatile unsigned int *)(UART_BASE + 0x04))
-#define UART_STATUS     (*(volatile unsigned int *)(UART_BASE + 0x08))
+#define UART_STATUS     (*(volatile unsigned int *)(UART_BASE + 0x00))  // Read-only: TX ready (bit 0), RX valid (bit 1)
+#define UART_BAUD_RATE  (*(volatile unsigned int *)(UART_BASE + 0x04))  // Read-only: configured baud rate
+#define UART_INTERRUPT  (*(volatile unsigned int *)(UART_BASE + 0x08))  // Write-only: interrupt enable
+#define UART_RECV       (*(volatile unsigned int *)(UART_BASE + 0x0C))  // Read-only: received data
+#define UART_SEND       (*(volatile unsigned int *)(UART_BASE + 0x10))  // Write-only: transmit data
 
 /* FIX #3: Simplified UART for initial testing
  * 
