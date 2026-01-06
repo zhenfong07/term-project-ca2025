@@ -2,6 +2,8 @@
 // MyCPU is freely redistributable under the MIT License. See the file
 // "LICENSE" for information on usage and redistribution of this file.
 
+package riscv
+
 import chisel3._
 import chiseltest._
 import org.scalatest.flatspec.AnyFlatSpec

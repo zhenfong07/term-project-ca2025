@@ -31,7 +31,7 @@ object CSRRegister {
   val MSCRATCH = 0x340.U(Parameters.CSRRegisterAddrWidth)
   val MEPC     = 0x341.U(Parameters.CSRRegisterAddrWidth)
   val MCAUSE   = 0x342.U(Parameters.CSRRegisterAddrWidth)
-  val MIP      = 0x344.U(Parameters.CSRRegisterAddrWidth) // Machine Interrupt Pending
+  val MIP      = 0x344.U(Parameters.CSRRegisterAddrWidth) // Machine Interruption 
 
   // Machine Counter/Timers (read-only shadows at 0xC00+)
   val CycleL   = 0xc00.U(Parameters.CSRRegisterAddrWidth) // Lower 32 bits of cycle counter
@@ -165,10 +165,7 @@ class CSR extends Module {
   val mepc     = RegInit(UInt(Parameters.DataWidth), 0.U)
   val mcause   = RegInit(UInt(Parameters.DataWidth), 0.U)
 
-  // Bit 0: Reserved (always 0)
-  // Bit 3: MSIP (Machine Software Interrupt) todo
-  // Bit 7: MTIP (Machine Timer Interrupt) 
-  // Bit 11: MEIP (Machine External Interrupt) 
+  // MIP
   val mip = WireDefault(io.interrupt_flag)
 
   // Machine Counter-Inhibit Register (mcountinhibit)
