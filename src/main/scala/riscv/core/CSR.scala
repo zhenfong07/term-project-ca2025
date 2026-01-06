@@ -26,14 +26,12 @@ object CSRRegister {
   // CSR addresses per RISC-V Privileged Spec v1.12, Section 3.1-3.2
   // Machine Information Registers
   val MSTATUS  = 0x300.U(Parameters.CSRRegisterAddrWidth)
-  val MISA     = 0x301.U(Parameters.CSRRegisterAddrWidth)
   val MIE      = 0x304.U(Parameters.CSRRegisterAddrWidth)
   val MTVEC    = 0x305.U(Parameters.CSRRegisterAddrWidth)
   val MSCRATCH = 0x340.U(Parameters.CSRRegisterAddrWidth)
   val MEPC     = 0x341.U(Parameters.CSRRegisterAddrWidth)
   val MCAUSE   = 0x342.U(Parameters.CSRRegisterAddrWidth)
-  val MTVAL    = 0x343.U(Parameters.CSRRegisterAddrWidth)
-  val MIP      = 0x344.U(Parameters.CSRRegisterAddrWidth)
+  val MIP      = 0x344.U(Parameters.CSRRegisterAddrWidth) // Machine Interrupt Pending
 
   // Machine Counter/Timers (read-only shadows at 0xC00+)
   val CycleL   = 0xc00.U(Parameters.CSRRegisterAddrWidth) // Lower 32 bits of cycle counter

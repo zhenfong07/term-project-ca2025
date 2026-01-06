@@ -64,7 +64,7 @@ class Top extends Module {
   // UART peripheral (115200 baud standard rate)
   val uart = Module(new Uart(frequency = 50000000, baudRate = 115200))
 
-  // Machine Timer peripheral (for FreeRTOS tick interrupts)
+  // Machine Timer
   val machine_timer = Module(new MachineTimer)
 
   val cpu         = Module(new CPU)
