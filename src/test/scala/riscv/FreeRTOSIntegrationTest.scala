@@ -174,3 +174,4 @@ class FreeRTOSIntegrationTest extends AnyFlatSpec with ChiselScalatestTester {
     }
   }
 }
+
