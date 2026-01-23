@@ -10,6 +10,7 @@ RISC-V RV32I processor with AXI4-Lite bus interface, VGA, and UART peripherals.
 - Peripherals:
   - VGA: 640x480@72Hz with 64x64 framebuffer (6x scaling) and 16-color palette
   - UART: Buffered TX/RX at 115200 baud with status register
+  - MachineTimer: 64-bit RISC-V standard timer for FreeRTOS tick interrupts
   - Memory: 2MB main memory (program loaded at 0x1000)
 
 ## Architecture
@@ -32,6 +33,11 @@ CPU (AXI4-Lite Master) + BTB (32-entry) + RAS (4-entry) + IndirectBTB (8-entry)
             ├─> 0x08: INTERRUPT (WO) - write non-zero to set, zero to clear
             ├─> 0x0C: RX_DATA (RO) - received byte (read clears interrupt)
             └─> 0x10: TX_DATA (WO) - transmit byte
+       └─> 0x6000_0000: Machine Timer
+            ├─> 0x00: MTIME_LO (RW) - Lower 32 bits of 64-bit time counter
+            ├─> 0x04: MTIME_HI (RW) - Upper 32 bits of 64-bit time counter
+            ├─> 0x08: MTIMECMP_LO (RW) - Lower 32 bits of timer compare value
+            └─> 0x0C: MTIMECMP_HI (RW) - Upper 32 bits of timer ompare value
 ```
 
 ## Build & Test
@@ -83,6 +89,31 @@ make clean
 4. Slave asserts `WREADY` (handshake)
 5. Slave asserts `BVALID` + `BRESP`
 6. Master asserts `BREADY` (handshake)
+
+## Machine Timer 
+
+64-bit timer peripheral for FreeRTOS tick interrupts, compliant with RISC-V privileged specification.
+
+### Register Map
+
+| Offset | Register | Access | Description |
+|-|-|-|-|
+| 0x00 | MTIME_LO | RW | Lower 32 bits of the timer  counter |
+| 0x04 | MTIME_HI | RW | Upper 32 bits of the timer counter  |
+| 0x08 | MTIMECMP_LO | RW | Lower 32 bits of compare timer |
+| 0x0C | MTIMECMP_HI | RW | Upper 32 bits of compare timer |
+
+### Operation
+
+- **Counter**: `mtime` increments every CPU clock cycle 
+
+- **Interrupt**: MTIP launch when `mtime >= mtimecmp`
+
+- **Clock Domain**: Timer runs at CPU clock frequency 
+
+- **FreeRTOS Integration**: Software can configures `mtimecmp` based on CPU frequency for desired tick rate
+
+Software clears the interrupt by writing a new value to `mtimecmp` greater than current `mtime`.
 
 ## Branch Prediction
 
