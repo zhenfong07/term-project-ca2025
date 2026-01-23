@@ -33,10 +33,11 @@ class MachineTimer(addrWidth: Int = 32, dataWidth: Int = Parameters.DataBits) ex
 
   val mtimecmp = RegInit("hffffffffffffffff".U(64.W))
 
-  
-
-
-  //Counter increment every cycle
+  // timer’s clock domain assumption:
+  // timer increments at the rate of CPU clock frequency (1 tick per CPU cycle)
+  // for exemple 3.4GHz system clock (my cpu rate), mtime increments 3 400 000 000 times per second
+  // FreeRTOS need to know CPU clock frequency when calculating timeouts to convert to real time.
+  //  this is why FreeRTOS can acces the tick rate in the FreeRTOSConfig.h file to 
   mtime := mtime + 1.U
 
   //interruption
