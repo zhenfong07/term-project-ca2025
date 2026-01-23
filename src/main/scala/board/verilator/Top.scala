@@ -121,7 +121,22 @@ class Top extends Module {
   io.timer_mtime    := machine_timer.io.debug_mtime
   io.timer_mtimecmp := machine_timer.io.debug_mtimecmp
 
-  // Interrupt info for CPU
+  // Interrupt Vector tabulation
+
+  //  Bit 0 = MTIP = Machine Timer Interrupt Pending                 
+  //    come from MachineTimer (mtime >= mtimecmp)      
+  //    Used by FreeRTOS for task switch       
+
+  //  Bit 11 = MEIP = Machine External Interrupt Pending
+  //    come from external peripherals like VGA
+
+  //  Bit 1 to 10 = reserved by the risck-v standard
+  //  Bit 12 to 31 = reserved by the risck-v standard
+
+  // I know that normally the number is 7 for MTIP and 11 for MEIP, but
+  // at the start i used 0 because i didn't know, and now everythings is working fine so i prefer to not change it.
+  // The software read MCAUSE code 7 not MIP bit 0 (like the riscv standard) because it translate it.
+  
   val interrupt_vector = WireDefault(0.U(32.W))
   interrupt_vector := Cat(
     0.U(20.W),                     // Bits 31-12

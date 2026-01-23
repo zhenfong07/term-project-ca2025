@@ -31,7 +31,7 @@ object CSRRegister {
   val MSCRATCH = 0x340.U(Parameters.CSRRegisterAddrWidth)
   val MEPC     = 0x341.U(Parameters.CSRRegisterAddrWidth)
   val MCAUSE   = 0x342.U(Parameters.CSRRegisterAddrWidth)
-  val MIP      = 0x344.U(Parameters.CSRRegisterAddrWidth) // Machine Interruption 
+  val MIP      = 0x344.U(Parameters.CSRRegisterAddrWidth) // Machine Interruption, miror of interruption sources
 
   // Machine Counter/Timers (read-only shadows at 0xC00+)
   val CycleL   = 0xc00.U(Parameters.CSRRegisterAddrWidth) // Lower 32 bits of cycle counter
@@ -165,7 +165,20 @@ class CSR extends Module {
   val mepc     = RegInit(UInt(Parameters.DataWidth), 0.U)
   val mcause   = RegInit(UInt(Parameters.DataWidth), 0.U)
 
-  // MIP
+  // MIP (Machine Interrupt Pending) miror of interruption sources
+
+  //  Bit 0 = MTIP = Machine Timer Interrupt Pending                 
+  //    come from MachineTimer (mtime >= mtimecmp)      
+  //    Used by FreeRTOS for task switch       
+
+  //  Bit 11 = MEIP = Machine External Interrupt Pending
+  //    come from external peripherals like VGA
+
+  //  Bit 1 to 10 = reserved by the risck-v standard
+  //  Bit 12 to 31 = reserved by the risck-v standard
+
+  // Software can reads MIP to identify which source launch an interuption.
+  // CLINT translates bit positions to standard RISC-V MCAUSE codes.
   val mip = WireDefault(io.interrupt_flag)
 
   // Machine Counter-Inhibit Register (mcountinhibit)
