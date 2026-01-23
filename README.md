@@ -115,6 +115,31 @@ make clean
 
 Software clears the interrupt by writing a new value to `mtimecmp` greater than current `mtime`.
 
+## FreeRTOS Integration
+
+### Preemptive Scheduling
+
+FreeRTOS runs in preemptive mode we can see it throught `configUSE_PREEMPTION = 1`
+
+Timer interrupts can preempt running tasks at any time and so scheduler automatically switches to higher-priority ready tasks
+
+Configuration: `software/FreeRTOSConfig.h` line 12
+
+### Memory Limits
+
+Current memory configuration:
+
+**Total size**: 8 KB (`configTOTAL_HEAP_SIZE = 8192`)
+
+Since we know that we use 512 bytes per task (128 words × 4 bytes) + some overhaed bytes. 
+We can approximately do 13 tasks.
+
+`8192 / (512 + 100) ≈ 13 tasks`
+
+But it depends of the task size requirement ,some task may reduce the memory available and so reduce maximum tasks.
+
+Configuration: `software/FreeRTOSConfig.h` lines 18-19
+
 ## Branch Prediction
 
 ### Branch Target Buffer (BTB)
